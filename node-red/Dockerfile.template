@@ -1,0 +1,17 @@
+FROM resin/%%BALENA_MACHINE_NAME%%-alpine-node:8-slim
+
+# Defines our working directory in container
+RUN mkdir -p /usr/src/app/
+WORKDIR /usr/src/app
+
+# Install node modules, including i2c-bus without carrying all the deps in the layers
+RUN apk add --no-cache make gcc g++ python && \
+  JOBS=MAX npm install -g node-red node-red-contrib-resinio --production --silent && \
+  apk del make gcc g++ python && \
+  npm cache clean --force && rm -rf /tmp/*
+
+# This will copy all files in our root to the working directory in the container
+COPY ./app ./
+
+# Start
+CMD ["bash", "/usr/src/app/start.sh"]
