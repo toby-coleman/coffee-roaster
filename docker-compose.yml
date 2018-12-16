@@ -1,6 +1,6 @@
 version: '2'
 services:
-  frontend:
+  nodered:
     build: ./node-red
-    expose:
-      - "8080"
+    ports:
+      - "8080:8080"
