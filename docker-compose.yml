@@ -5,3 +5,7 @@ services:
     privileged: true
     ports:
       - "8080:8080"
+  web:
+    build: ./web
+    ports:
+      - "80:80"
