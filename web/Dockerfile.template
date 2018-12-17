@@ -8,7 +8,9 @@ WORKDIR /usr/src/app
 COPY ./app ./
 
 # Install Python dependencies
-RUN pip install -r requirements.txt
+RUN apk add --no-cache make gcc g++ gfortran && \
+  pip install -r requirements.txt && \
+  apk del make gcc g++ gfortran && \
 
 # Start
 CMD ["python", "/usr/src/app/application.py"]
