@@ -2,5 +2,6 @@ version: '2'
 services:
   nodered:
     build: ./node-red
+    privileged: true
     ports:
       - "8080:8080"
