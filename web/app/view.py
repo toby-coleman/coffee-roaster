@@ -28,7 +28,7 @@ layout = html.Div(
                                 html.Div(
                                     [
                                         html.H6('Set heater output'),
-                                        dcc.Slider(min=0, max=100, step=1, value=-3, id='heat-slider'),
+                                        dcc.Slider(min=0, max=100, step=1, value=0, id='heat-slider'),
                                         html.Span('', className='badge badge-pill badge-primary text-center', id='heat-badge'),
                                     ],
                                     className='card-body'
@@ -47,7 +47,7 @@ layout = html.Div(
                                 # For live updates to chart
                                 dcc.Interval(
                                     id='interval-component',
-                                    interval=2*1000, # in milliseconds
+                                    interval=15 * 1000, # in milliseconds
                                     n_intervals=0
                                 ),
                             ],
@@ -91,16 +91,16 @@ def chart():
     # Axis range
     dfinish = pd.Timestamp.utcnow().value // 10 ** 6
     dstart = dfinish - 30 * 60 * 1000 # 30 minutes
-    # fig['layout'].update(
-    #     xaxis={
-    #         'title':'Time', 'range': [dstart, dfinish]
-    #     },
-    #     yaxis={'title': 'Temperature, °C'},
-    #     yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
-    #     margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
-    #     height=460,
-    #     showlegend=False,
-    # )
+    fig['layout'].update(
+        xaxis={
+            'title':'Time', 'range': [dstart, dfinish]
+        },
+        yaxis={'title': 'Temperature, °C'},
+        yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
+        margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
+        height=460,
+        showlegend=False,
+    )
     
     return fig
 
