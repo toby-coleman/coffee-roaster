@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 # Install node modules, including i2c-bus without carrying all the deps in the layers
 RUN apk add --no-cache make gcc g++ python && \
-  JOBS=MAX npm install -g node-red node-red-contrib-resinio node-red-admin --production --silent && \
+  JOBS=MAX npm install -g node-red node-red-contrib-resinio node-red-admin node-red-contrib-redis @heatworks/node-red-contrib-adafruit-max31855 --production --silent && \
   apk del make gcc g++ python && \
   npm cache clean --force && rm -rf /tmp/*
 

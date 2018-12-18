@@ -15,3 +15,11 @@ USERNAME      | `none`        | the Node-RED admin username
 PASSWORD      | `none`        | the Node-RED admin password [hash](https://nodered.org/docs/security#generating-the-password-hash)
 
 You **must** set the `USERNAME` and `PASSWORD` environment variables to be able to save or run programs in Node-RED. 
+
+### Redis
+
+Provides a cache for use by the other components.
+
+### Dash app
+
+Basic template of a [Dash](https://plot.ly/products/dash/) UI.
