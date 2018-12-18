@@ -22,7 +22,7 @@ app.layout = html.Div(children=[
     html.Div(
         children=[
             html.H5(
-                'Raspberry Pi',
+                'Coffee Roaster',
                 className='my-0 mr-md-auto text-light font-weight-bold',
             ),
             html.Nav(
@@ -46,6 +46,13 @@ app.layout = html.Div(children=[
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
     return view.layout
+
+
+# Callback to update chart
+@app.callback(dash.dependencies.Output('main-chart', 'figure'),
+              [dash.dependencies.Input('interval-component', 'n_intervals')])
+def update_chart(n):
+    return view.chart()
 
 
 if __name__ == '__main__':
