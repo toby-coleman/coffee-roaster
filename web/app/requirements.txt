@@ -1,6 +1,7 @@
 pandas
 numpy
 requests
+redis
 plotly
 dash
 dash-renderer
