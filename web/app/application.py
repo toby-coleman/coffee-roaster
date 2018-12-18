@@ -55,5 +55,12 @@ def update_chart(n):
     return view.chart()
 
 
+# Callback to set heater level
+@app.callback(dash.dependencies.Output('heat-badge', 'children'),
+              [dash.dependencies.Input('heat-slider', 'value')])
+def update_scatter_chart(value):
+    return view.set_heat(value)
+
+
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', threaded=True, debug=True, port=80)

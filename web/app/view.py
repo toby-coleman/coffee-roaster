@@ -27,7 +27,9 @@ layout = html.Div(
                                 ),
                                 html.Div(
                                     [
-                                        # TODO: Controls
+                                        html.H6('Set heater output'),
+                                        dcc.Slider(min=0, max=100, step=1, value=-3, id='heat-slider'),
+                                        html.Span('', className='badge badge-pill badge-primary text-center', id='heat-badge'),
                                     ],
                                     className='card-body'
                                 ),
@@ -101,3 +103,8 @@ def chart():
     )
     
     return fig
+
+
+def set_heat(value):
+    control.publish('set.heat', value)
+    return '{0}%'.format(value)
