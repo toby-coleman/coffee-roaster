@@ -91,16 +91,16 @@ def chart():
     # Axis range
     dfinish = pd.Timestamp.utcnow().value // 10 ** 6
     dstart = dfinish - 30 * 60 * 1000 # 30 minutes
-    fig['layout'].update(
-        xaxis={
-            'title':'Time', 'range': [dstart, dfinish]
-        },
-        yaxis={'title': 'Temperature, °C'},
-        yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
-        margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
-        height=460,
-        showlegend=False,
-    )
+    # fig['layout'].update(
+    #     xaxis={
+    #         'title':'Time', 'range': [dstart, dfinish]
+    #     },
+    #     yaxis={'title': 'Temperature, °C'},
+    #     yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
+    #     margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
+    #     height=460,
+    #     showlegend=False,
+    # )
     
     return fig
 
