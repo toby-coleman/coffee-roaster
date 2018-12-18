@@ -67,15 +67,13 @@ def chart():
     )
 
     temperature = control.data('log.temperature')
-    print(temperature.head())
     heat = control.data('log.heat')
-    print(heat.head())
     # Temperature trace
     fig.append_trace(
         go.Scatter(
             x=temperature.index,
             y=temperature.value,
-            name='Temperature', line={'color': 'red', 'shape': 'hv'}, mode='lines'
+            name='Temperature', line={'color': '#1f77b4', 'shape': 'hv', 'width': 1}, mode='lines'
         ),
         row=1, col=1
     )
@@ -84,14 +82,16 @@ def chart():
         go.Scatter(
             x=heat.index,
             y=heat.value,
-            name='Heater output', line={'color': 'blue', 'shape': 'hv'}, mode='lines'
+            name='Heater output', line={'color': '#d62728', 'shape': 'hv', 'width': 1}, mode='lines'
         ),
         row=3, col=1
     )
+    # Axis range
+    dfinish = pd.Timestamp.utcnow().value // 10 ** 6
+    dstart = dfinish - 30 * 60 * 1000 # 30 minutes
     fig['layout'].update(
         xaxis={
-            'title':'Time',
-            'range': [pd.Timestamp.utcnow() - pd.Timedelta(minutes=30), pd.Timestamp.utcnow()]
+            'title':'Time', 'range': [dstart, dfinish]
         },
         yaxis={'title': 'Temperature, °C'},
         yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
