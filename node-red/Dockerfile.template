@@ -5,13 +5,16 @@ RUN mkdir -p /usr/src/app/
 WORKDIR /usr/src/app
 
 # Install node modules, including i2c-bus without carrying all the deps in the layers
-RUN apk add --no-cache make gcc g++ python && \
+RUN apk add --no-cache make gcc g++ python python-dev py-pip && \
   JOBS=MAX npm install -g node-red node-red-contrib-resinio node-red-admin node-red-contrib-redis @heatworks/node-red-contrib-adafruit-max31855 --production --silent && \
-  apk del make gcc g++ python && \
+  pip install RPi.GPIO && \
+  apk del make gcc g++ && \
   npm cache clean --force && rm -rf /tmp/*
 
 # This will copy all files in our root to the working directory in the container
 COPY ./app ./
+# Copy the flow file
+COPY ./app/flows/flows.json /data/node-red/user/flows.json
 
 # Start
 CMD ["bash", "/usr/src/app/start.sh"]

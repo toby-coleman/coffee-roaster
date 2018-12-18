@@ -1,0 +1,141 @@
+[
+    {
+        "id": "3de292d6.8a219e",
+        "type": "tab",
+        "label": "Coffee roaster",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "77d95a54.f2b364",
+        "type": "debug",
+        "z": "3de292d6.8a219e",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 590,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "324de882.178998",
+        "type": "redis-in",
+        "z": "3de292d6.8a219e",
+        "server": "39113e59.d16132",
+        "command": "subscribe",
+        "name": "set.heat",
+        "topic": "set.heat",
+        "timeout": 0,
+        "x": 170,
+        "y": 80,
+        "wires": [
+            [
+                "77d95a54.f2b364",
+                "e137997d.9a27a8",
+                "f6fdb38d.4c291"
+            ]
+        ]
+    },
+    {
+        "id": "e2810af5.3d35c8",
+        "type": "redis-out",
+        "z": "3de292d6.8a219e",
+        "server": "39113e59.d16132",
+        "command": "lpush",
+        "name": "log.heat",
+        "topic": "log.heat",
+        "x": 580,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e137997d.9a27a8",
+        "type": "function",
+        "z": "3de292d6.8a219e",
+        "name": "Create log",
+        "func": "var time_stamp = Math.floor(Date.now());\nmsg.payload = {'timestamp': time_stamp, 'value': msg.payload};\nmsg.topic = 'log.' + msg.topic.replace('set.', '')\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 160,
+        "wires": [
+            [
+                "e2810af5.3d35c8"
+            ]
+        ]
+    },
+    {
+        "id": "f6fdb38d.4c291",
+        "type": "rpi-gpio out",
+        "z": "3de292d6.8a219e",
+        "name": "SSR control",
+        "pin": "7",
+        "set": false,
+        "level": "0",
+        "freq": "1",
+        "out": "pwm",
+        "x": 590,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "41b73eac.481a6",
+        "type": "inject",
+        "z": "3de292d6.8a219e",
+        "name": "temperature",
+        "topic": "temperature",
+        "payload": "20",
+        "payloadType": "num",
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 170,
+        "y": 320,
+        "wires": [
+            [
+                "ef63d82c.eb0ce8"
+            ]
+        ]
+    },
+    {
+        "id": "afe6c4ca.200268",
+        "type": "redis-out",
+        "z": "3de292d6.8a219e",
+        "server": "39113e59.d16132",
+        "command": "lpush",
+        "name": "log.temperature",
+        "topic": "log.temperature",
+        "x": 600,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "ef63d82c.eb0ce8",
+        "type": "function",
+        "z": "3de292d6.8a219e",
+        "name": "Create log",
+        "func": "var time_stamp = Math.floor(Date.now());\nmsg.payload = {'timestamp': time_stamp, 'value': msg.payload};\nmsg.topic = 'log.' + msg.topic.replace('set.', '')\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 280,
+        "wires": [
+            [
+                "afe6c4ca.200268"
+            ]
+        ]
+    },
+    {
+        "id": "39113e59.d16132",
+        "type": "redis-config",
+        "z": "",
+        "host": "redis",
+        "port": "{{REDIS_PORT}}",
+        "dbase": "{{REDIS_DB}}",
+        "pass": ""
+    }
+]
