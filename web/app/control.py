@@ -18,7 +18,7 @@ def data(topic, max_points=1800):
     df = df.assign(
         timestamp=pd.to_datetime(df.timestamp, unit='ms')
     ).set_index('timestamp')
-    return df
+    return df.sort_index()
 
 
 def publish(topic, value):

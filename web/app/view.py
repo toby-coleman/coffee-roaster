@@ -33,7 +33,7 @@ layout = html.Div(
                                 ),
                             ],
                             className='card',
-                            style={'width': '100%', 'height': '480px'}
+                            style={'width': '100%', 'height': '460px'}
                         )
                     ], className='col-lg-4'),
 
@@ -60,10 +60,16 @@ layout = html.Div(
 
 
 def chart():
-    fig = tools.make_subplots(rows=3, cols=1, shared_xaxes=True, specs=[[{'rowspan': 2}], [None], [{}]])
+    fig = tools.make_subplots(
+        rows=3, cols=1,
+        shared_xaxes=True, specs=[[{'rowspan': 2}], [None], [{}]],
+        print_grid=False
+    )
 
     temperature = control.data('log.temperature')
+    print(temperature.head())
     heat = control.data('log.heat')
+    print(heat.head())
     # Temperature trace
     fig.append_trace(
         go.Scatter(
@@ -90,7 +96,7 @@ def chart():
         yaxis={'title': 'Temperature, °C'},
         yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
         margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
-        height=480,
+        height=460,
         showlegend=False,
     )
     
