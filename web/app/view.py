@@ -31,10 +31,11 @@ layout = html.Div(
                                         dcc.Slider(min=0, max=100, step=1, value=0, id='heat-slider'),
                                         html.Span('', className='badge badge-pill badge-primary', id='heat-badge'),
                                         html.Br(),
+                                        html.Br(),
                                         html.H6('Latest data:'),
                                         html.Table(
                                             html.Tbody([], id='latest-table'),
-                                            className='table table-striped'
+                                            className='table table-striped table-sm'
                                         ),
                                         # For live updates to data table
                                         dcc.Interval(
@@ -121,7 +122,7 @@ def table():
     data = control.latest(['log.temperature', 'log.heat'])
     return [
         html.Tr([html.Td(key.replace('log.', '').capitalize()), html.Td(value)])
-        for key, value in data
+        for key, value in data.items()
     ]
 
 
