@@ -47,8 +47,8 @@
         "command": "lpush",
         "name": "log.heat",
         "topic": "log.heat",
-        "x": 720,
-        "y": 200,
+        "x": 820,
+        "y": 220,
         "wires": []
     },
     {
@@ -60,7 +60,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 570,
-        "y": 200,
+        "y": 220,
         "wires": [
             [
                 "e2810af5.3d35c8"
@@ -87,7 +87,7 @@
         "z": "3de292d6.8a219e",
         "name": "temperature",
         "topic": "temperature",
-        "payload": "20",
+        "payload": "21",
         "payloadType": "num",
         "repeat": "1",
         "crontab": "",
@@ -97,7 +97,8 @@
         "y": 240,
         "wires": [
             [
-                "2b2a9af9.5a7e26"
+                "2b2a9af9.5a7e26",
+                "3153bc65.fe2654"
             ]
         ]
     },
@@ -109,7 +110,7 @@
         "command": "lpush",
         "name": "log.temperature",
         "topic": "log.temperature",
-        "x": 740,
+        "x": 800,
         "y": 280,
         "wires": []
     },
@@ -151,6 +152,78 @@
                 "ef63d82c.eb0ce8"
             ]
         ]
+    },
+    {
+        "id": "3153bc65.fe2654",
+        "type": "join",
+        "z": "3de292d6.8a219e",
+        "name": "10s group",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "10",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "($I = 0) ? payload : (($I = $N - 1) ? (payload - $A) : $A)",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 180,
+        "y": 340,
+        "wires": [
+            [
+                "ab6e40c4.c44b4"
+            ]
+        ]
+    },
+    {
+        "id": "ab6e40c4.c44b4",
+        "type": "function",
+        "z": "3de292d6.8a219e",
+        "name": "Rate of change",
+        "func": "var last = msg.payload[msg.payload.length - 1];\nvar first = msg.payload[0];\n// Rate of change in degrees per minute\nmsg.payload = (last - first) * 6;\nmsg.topic = msg.topic + '_roc'\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 400,
+        "wires": [
+            [
+                "4c473704.876bc8"
+            ]
+        ]
+    },
+    {
+        "id": "4c473704.876bc8",
+        "type": "function",
+        "z": "3de292d6.8a219e",
+        "name": "Create log",
+        "func": "var time_stamp = Math.floor(Date.now());\nmsg.payload = {'timestamp': time_stamp, 'value': msg.payload};\nmsg.topic = 'log.' + msg.topic.replace('set.', '')\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 570,
+        "y": 340,
+        "wires": [
+            [
+                "e2a7e869.5163f8"
+            ]
+        ]
+    },
+    {
+        "id": "e2a7e869.5163f8",
+        "type": "redis-out",
+        "z": "3de292d6.8a219e",
+        "server": "39113e59.d16132",
+        "command": "lpush",
+        "name": "log.temperature_roc",
+        "topic": "log.temperature_roc",
+        "x": 780,
+        "y": 340,
+        "wires": []
     },
     {
         "id": "39113e59.d16132",

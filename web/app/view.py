@@ -119,9 +119,9 @@ def chart():
 
 
 def table():
-    data = control.latest(['log.temperature', 'log.heat'])
+    data = control.latest(['log.temperature', 'log.temperature_roc', 'log.heat'])
     return [
-        html.Tr([html.Td(key.replace('log.', '').capitalize()), html.Td(value)])
+        html.Tr([html.Td(key.replace('log.', '')), html.Td(value)])
         for key, value in data.items()
     ]
 
