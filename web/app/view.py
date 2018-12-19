@@ -27,9 +27,21 @@ layout = html.Div(
                                 ),
                                 html.Div(
                                     [
-                                        html.H6('Set heater output'),
+                                        html.H6('Set heater output:'),
                                         dcc.Slider(min=0, max=100, step=1, value=0, id='heat-slider'),
-                                        html.Span('', className='badge badge-pill badge-primary text-center', id='heat-badge'),
+                                        html.Span('', className='badge badge-pill badge-primary', id='heat-badge'),
+                                        html.Br(),
+                                        html.H6('Latest data:'),
+                                        html.Table(
+                                            html.Tbody([], id='latest-table'),
+                                            className='table table-striped'
+                                        ),
+                                        # For live updates to data table
+                                        dcc.Interval(
+                                            id='data-interval-component',
+                                            interval=2 * 1000, # in milliseconds
+                                            n_intervals=0
+                                        ),
                                     ],
                                     className='card-body'
                                 ),
@@ -103,6 +115,14 @@ def chart():
     )
     
     return fig
+
+
+def table():
+    data = control.latest(['log.temperature', 'log.heat'])
+    return [
+        html.Tr([html.Td(key.replace('log.', '').capitalize()), html.Td(value)])
+        for key, value in data
+    ]
 
 
 def set_heat(value):

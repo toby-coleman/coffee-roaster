@@ -62,5 +62,12 @@ def update_scatter_chart(value):
     return view.set_heat(value)
 
 
+# Callback to update latest value table
+@app.callback(dash.dependencies.Output('latest-table', 'children'),
+              [dash.dependencies.Input('data-interval-component', 'value')])
+def update_table(value):
+    return view.table()
+
+
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', threaded=True, debug=True, port=80)
