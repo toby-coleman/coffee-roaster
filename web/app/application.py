@@ -14,7 +14,7 @@ app = dash.Dash(
     external_stylesheets=stylesheets
 )
 app.config['suppress_callback_exceptions'] = True
-app.title = 'Raspberry Pi'
+app.title = 'Coffee Roast Controller'
 application = app.server
 
 
@@ -64,8 +64,8 @@ def update_scatter_chart(value):
 
 # Callback to update latest value table
 @app.callback(dash.dependencies.Output('latest-table', 'children'),
-              [dash.dependencies.Input('data-interval-component', 'value')])
-def update_table(value):
+              [dash.dependencies.Input('data-interval-component', 'n_intervals')])
+def update_table(n):
     return view.table()
 
 
