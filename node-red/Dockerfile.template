@@ -4,7 +4,7 @@ FROM resin/%%BALENA_MACHINE_NAME%%-alpine-node:8-slim
 RUN mkdir -p /usr/src/app/
 
 # Install node modules, including i2c-bus without carrying all the deps in the layers
-RUN apk add --no-cache make gcc g++ python python-dev py-pip python-smbus musl-dev linux-headers && \
+RUN apk add --no-cache make gcc g++ python python-dev py-pip py-smbus musl-dev linux-headers && \
   JOBS=MAX npm install -g node-red node-red-contrib-resinio node-red-admin node-red-contrib-redis --production --silent && \
   pip install RPi.GPIO && \
   npm cache clean --force && rm -rf /tmp/*
