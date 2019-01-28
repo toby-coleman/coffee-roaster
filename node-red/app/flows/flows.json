@@ -7,18 +7,13 @@
         "info": ""
     },
     {
-        "id": "77d95a54.f2b364",
-        "type": "debug",
-        "z": "3de292d6.8a219e",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 570,
-        "y": 40,
-        "wires": []
+        "id": "39113e59.d16132",
+        "type": "redis-config",
+        "z": "",
+        "host": "redis",
+        "port": "{{REDIS_PORT}}",
+        "dbase": "{{REDIS_DB}}",
+        "pass": ""
     },
     {
         "id": "324de882.178998",
@@ -29,13 +24,12 @@
         "name": "set.heat",
         "topic": "set.heat",
         "timeout": 0,
-        "x": 170,
-        "y": 80,
+        "x": 110,
+        "y": 120,
         "wires": [
             [
-                "77d95a54.f2b364",
                 "e137997d.9a27a8",
-                "f6fdb38d.4c291"
+                "feae6c2d.92ede"
             ]
         ]
     },
@@ -48,7 +42,7 @@
         "name": "log.heat",
         "topic": "log.heat",
         "x": 820,
-        "y": 220,
+        "y": 340,
         "wires": []
     },
     {
@@ -60,7 +54,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 570,
-        "y": 220,
+        "y": 340,
         "wires": [
             [
                 "e2810af5.3d35c8"
@@ -68,37 +62,22 @@
         ]
     },
     {
-        "id": "f6fdb38d.4c291",
-        "type": "rpi-gpio out",
-        "z": "3de292d6.8a219e",
-        "name": "SSR control",
-        "pin": "7",
-        "set": false,
-        "level": "0",
-        "freq": "1",
-        "out": "pwm",
-        "x": 570,
-        "y": 120,
-        "wires": []
-    },
-    {
         "id": "41b73eac.481a6",
         "type": "inject",
         "z": "3de292d6.8a219e",
         "name": "temperature",
         "topic": "temperature",
-        "payload": "21",
+        "payload": "0",
         "payloadType": "num",
-        "repeat": "1",
+        "repeat": "2",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "x": 130,
-        "y": 240,
+        "x": 140,
+        "y": 40,
         "wires": [
             [
-                "2b2a9af9.5a7e26",
-                "3153bc65.fe2654"
+                "13e351b.69051ae"
             ]
         ]
     },
@@ -111,7 +90,7 @@
         "name": "log.temperature",
         "topic": "log.temperature",
         "x": 800,
-        "y": 280,
+        "y": 400,
         "wires": []
     },
     {
@@ -123,33 +102,10 @@
         "outputs": 1,
         "noerr": 0,
         "x": 570,
-        "y": 280,
+        "y": 400,
         "wires": [
             [
                 "afe6c4ca.200268"
-            ]
-        ]
-    },
-    {
-        "id": "2b2a9af9.5a7e26",
-        "type": "delay",
-        "z": "3de292d6.8a219e",
-        "name": "Sample rate",
-        "pauseType": "rate",
-        "timeout": "5",
-        "timeoutUnits": "seconds",
-        "rate": "30",
-        "nbRateUnits": "1",
-        "rateUnits": "minute",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": true,
-        "x": 350,
-        "y": 240,
-        "wires": [
-            [
-                "ef63d82c.eb0ce8"
             ]
         ]
     },
@@ -166,8 +122,8 @@
         "joiner": "\\n",
         "joinerType": "str",
         "accumulate": false,
-        "timeout": "10",
-        "count": "",
+        "timeout": "",
+        "count": "5",
         "reduceRight": false,
         "reduceExp": "($I = 0) ? payload : (($I = $N - 1) ? (payload - $A) : $A)",
         "reduceInit": "",
@@ -206,7 +162,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 570,
-        "y": 340,
+        "y": 460,
         "wires": [
             [
                 "e2a7e869.5163f8"
@@ -222,16 +178,82 @@
         "name": "log.temperature_roc",
         "topic": "log.temperature_roc",
         "x": 780,
-        "y": 340,
+        "y": 460,
         "wires": []
     },
     {
-        "id": "39113e59.d16132",
-        "type": "redis-config",
-        "z": "",
-        "host": "redis",
-        "port": "{{REDIS_PORT}}",
-        "dbase": "{{REDIS_DB}}",
-        "pass": ""
+        "id": "13e351b.69051ae",
+        "type": "exec",
+        "z": "3de292d6.8a219e",
+        "command": "python /usr/src/thermocouple.py",
+        "addpay": false,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "read_max31855",
+        "x": 380,
+        "y": 40,
+        "wires": [
+            [
+                "8c5288df.21ed68"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "8c5288df.21ed68",
+        "type": "csv",
+        "z": "3de292d6.8a219e",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "thermocouple,internal",
+        "skip": "0",
+        "x": 650,
+        "y": 40,
+        "wires": [
+            [
+                "ccda49e0.40fdc8"
+            ]
+        ]
+    },
+    {
+        "id": "ccda49e0.40fdc8",
+        "type": "template",
+        "z": "3de292d6.8a219e",
+        "name": "thermocouple",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{{payload.thermocouple}}",
+        "output": "json",
+        "x": 160,
+        "y": 260,
+        "wires": [
+            [
+                "ef63d82c.eb0ce8",
+                "3153bc65.fe2654"
+            ]
+        ]
+    },
+    {
+        "id": "feae6c2d.92ede",
+        "type": "rpi-gpio out",
+        "z": "3de292d6.8a219e",
+        "name": "ssr",
+        "pin": "40",
+        "set": "",
+        "level": "0",
+        "freq": "1",
+        "out": "pwm",
+        "x": 830,
+        "y": 180,
+        "wires": []
     }
 ]

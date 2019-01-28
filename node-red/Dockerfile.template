@@ -2,16 +2,21 @@ FROM resin/%%BALENA_MACHINE_NAME%%-alpine-node:8-slim
 
 # Defines our working directory in container
 RUN mkdir -p /usr/src/app/
-WORKDIR /usr/src/app
 
 # Install node modules, including i2c-bus without carrying all the deps in the layers
-RUN apk add --no-cache make gcc g++ python python-dev py-pip && \
-  JOBS=MAX npm install -g node-red node-red-contrib-resinio node-red-admin node-red-contrib-redis node-red-contrib-rate @heatworks/node-red-contrib-adafruit-max31855 --production --silent && \
+RUN apk add --no-cache make gcc g++ python python-dev py-pip python-smbus musl-dev linux-headers && \
+  JOBS=MAX npm install -g node-red node-red-contrib-resinio node-red-admin node-red-contrib-redis --production --silent && \
   pip install RPi.GPIO && \
-  apk del make gcc g++ && \
   npm cache clean --force && rm -rf /tmp/*
 
+# Copy over Python source code and install
+WORKDIR /usr/src
+COPY ./src ./
+RUN python Adafruit_Python_GPIO/setup.py install && \
+  python Adafruit_Python_MAX31855/setup.py install
+
 # This will copy all files in our root to the working directory in the container
+WORKDIR /usr/src/app
 COPY ./app ./
 # Copy the flow file
 COPY ./app/flows/flows.json /data/node-red/user/flows.json
