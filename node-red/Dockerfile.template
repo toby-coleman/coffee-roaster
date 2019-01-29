@@ -10,10 +10,11 @@ RUN apk add --no-cache make gcc g++ python python-dev py-pip musl-dev linux-head
   npm cache clean --force && rm -rf /tmp/*
 
 # Copy over Python source code and install
-WORKDIR /usr/src
-COPY ./src ./
-RUN python Adafruit_Python_GPIO/setup.py install && \
-  python Adafruit_Python_MAX31855/setup.py install
+COPY ./src/. /usr/src
+WORKDIR /usr/src/Adafruit_Python_GPIO
+RUN python setup.py install
+WORKDIR /usr/src/Adafruit_Python_MAX31855
+RUN python setup.py install
 
 # This will copy all files in our root to the working directory in the container
 WORKDIR /usr/src/app
