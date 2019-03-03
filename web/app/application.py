@@ -71,14 +71,6 @@ def start_pid(value):
     return view.start_pid(value)
 
 
-# Callback to set temperature ROR on PID control
-@app.callback(dash.dependencies.Output('ror-badge', 'children'),
-              [dash.dependencies.Input('ror-slider', 'value'),
-               dash.dependencies.Input('data-interval-component', 'n_intervals')])
-def update_pid(value, n):
-    return view.update_pid(value)
-
-
 # Callback to update heat-badge colour
 @app.callback(dash.dependencies.Output('heat-badge', 'className'),
               [dash.dependencies.Input('data-interval-component', 'n_intervals')])
@@ -86,10 +78,12 @@ def update_heat_badge(n):
     return view.badge_auto(True)
 
 
-# Callback to update ror-badge colour
+# Callback to update ror-badge colour and update PID settings
 @app.callback(dash.dependencies.Output('ror-badge', 'className'),
-              [dash.dependencies.Input('data-interval-component', 'n_intervals')])
-def update_ror_badge(n):
+              [dash.dependencies.Input('ror-slider', 'value')
+               dash.dependencies.Input('data-interval-component', 'n_intervals')])
+def update_ror_badge(value, n):
+    view.update_pid(value)
     return view.badge_auto(False)
 
 
