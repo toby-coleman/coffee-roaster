@@ -60,14 +60,14 @@ def update_chart(n):
 # Callback to set heater level
 @app.callback(dash.dependencies.Output('heat-badge', 'children'),
               [dash.dependencies.Input('heat-slider', 'value')])
-def update_scatter_chart(value):
+def set_heat(value):
     return view.set_heat(value)
 
 
 # Callback to set start PID control
 @app.callback(dash.dependencies.Output('ror-badge', 'children'),
               [dash.dependencies.Input('ror-slider', 'value')])
-def update_scatter_chart(value, n):
+def start_pid(value):
     return view.start_pid(value)
 
 
@@ -75,7 +75,7 @@ def update_scatter_chart(value, n):
 @app.callback(dash.dependencies.Output('ror-badge', 'children'),
               [dash.dependencies.Input('ror-slider', 'value'),
                dash.dependencies.Input('data-interval-component', 'n_intervals')])
-def update_scatter_chart(value, n):
+def update_pid(value, n):
     return view.update_pid(value)
 
 
