@@ -24,12 +24,12 @@
         "name": "set.heat",
         "topic": "set.heat",
         "timeout": 0,
-        "x": 110,
-        "y": 120,
+        "x": 90,
+        "y": 520,
         "wires": [
             [
-                "e137997d.9a27a8",
-                "feae6c2d.92ede"
+                "6bddc12e.c73c4",
+                "51a11cc8.cce5f4"
             ]
         ]
     },
@@ -41,8 +41,8 @@
         "command": "lpush",
         "name": "log.heat",
         "topic": "log.heat",
-        "x": 820,
-        "y": 340,
+        "x": 1120,
+        "y": 400,
         "wires": []
     },
     {
@@ -53,8 +53,8 @@
         "func": "var time_stamp = Math.floor(Date.now());\nmsg.payload = {'timestamp': time_stamp, 'value': msg.payload};\nmsg.topic = 'log.' + msg.topic.replace('set.', '')\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 570,
-        "y": 340,
+        "x": 910,
+        "y": 400,
         "wires": [
             [
                 "e2810af5.3d35c8"
@@ -90,7 +90,7 @@
         "name": "log.temperature",
         "topic": "log.temperature",
         "x": 800,
-        "y": 400,
+        "y": 260,
         "wires": []
     },
     {
@@ -102,7 +102,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 570,
-        "y": 400,
+        "y": 260,
         "wires": [
             [
                 "afe6c4ca.200268"
@@ -145,8 +145,8 @@
         "func": "var last = msg.payload[msg.payload.length - 1];\nvar first = msg.payload[0];\n// Rate of change in degrees per minute\nmsg.payload = (last - first) * 6;\nmsg.topic = msg.topic + '_roc'\nreturn msg",
         "outputs": 1,
         "noerr": 0,
-        "x": 340,
-        "y": 400,
+        "x": 360,
+        "y": 340,
         "wires": [
             [
                 "4c473704.876bc8"
@@ -162,7 +162,7 @@
         "outputs": 1,
         "noerr": 0,
         "x": 570,
-        "y": 460,
+        "y": 340,
         "wires": [
             [
                 "e2a7e869.5163f8"
@@ -178,7 +178,7 @@
         "name": "log.temperature_roc",
         "topic": "log.temperature_roc",
         "x": 780,
-        "y": 460,
+        "y": 340,
         "wires": []
     },
     {
@@ -238,7 +238,8 @@
         "wires": [
             [
                 "ef63d82c.eb0ce8",
-                "3153bc65.fe2654"
+                "3153bc65.fe2654",
+                "648368a.c09e498"
             ]
         ]
     },
@@ -252,8 +253,354 @@
         "level": "0",
         "freq": "1",
         "out": "pwm",
-        "x": 830,
-        "y": 180,
+        "x": 1130,
+        "y": 480,
         "wires": []
+    },
+    {
+        "id": "648368a.c09e498",
+        "type": "PID",
+        "z": "3de292d6.8a219e",
+        "name": "pid control",
+        "setpoint": "0",
+        "pb": "50",
+        "ti": "60",
+        "td": 0,
+        "integral_default": "0",
+        "smooth_factor": 3,
+        "max_interval": "60",
+        "enable": "0",
+        "disabled_op": "0",
+        "x": 590,
+        "y": 600,
+        "wires": [
+            [
+                "5e0e5a2f.199cc4"
+            ]
+        ]
+    },
+    {
+        "id": "6bddc12e.c73c4",
+        "type": "change",
+        "z": "3de292d6.8a219e",
+        "name": "disable pid",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "enable",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "auto",
+                "pt": "flow",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 560,
+        "wires": [
+            [
+                "648368a.c09e498",
+                "b8bc56c3.93c788"
+            ]
+        ]
+    },
+    {
+        "id": "3056b670.f7cc2a",
+        "type": "redis-in",
+        "z": "3de292d6.8a219e",
+        "server": "39113e59.d16132",
+        "command": "subscribe",
+        "name": "set.setpoint",
+        "topic": "set.setpoint",
+        "timeout": 0,
+        "x": 90,
+        "y": 660,
+        "wires": [
+            [
+                "d16e95b5.aad6f8",
+                "910276d5.5546a8",
+                "3f5b40b9.882de"
+            ]
+        ]
+    },
+    {
+        "id": "d16e95b5.aad6f8",
+        "type": "change",
+        "z": "3de292d6.8a219e",
+        "name": "enable pid",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "enable",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "1",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "auto",
+                "pt": "flow",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 633.3333129882812,
+        "wires": [
+            [
+                "648368a.c09e498",
+                "b8bc56c3.93c788"
+            ]
+        ]
+    },
+    {
+        "id": "910276d5.5546a8",
+        "type": "change",
+        "z": "3de292d6.8a219e",
+        "name": "setpoint",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "setpoint",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 700,
+        "wires": [
+            [
+                "648368a.c09e498"
+            ]
+        ]
+    },
+    {
+        "id": "99ccae69.21b24",
+        "type": "debug",
+        "z": "3de292d6.8a219e",
+        "name": "output",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1130,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "5e0e5a2f.199cc4",
+        "type": "range",
+        "z": "3de292d6.8a219e",
+        "minin": "0",
+        "maxin": "1",
+        "minout": "0",
+        "maxout": "100",
+        "action": "scale",
+        "round": true,
+        "property": "payload",
+        "name": "",
+        "x": 630,
+        "y": 720,
+        "wires": [
+            [
+                "3262f2af.47f97e"
+            ]
+        ]
+    },
+    {
+        "id": "51a11cc8.cce5f4",
+        "type": "delay",
+        "z": "3de292d6.8a219e",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "0.1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 330,
+        "y": 480,
+        "wires": [
+            [
+                "e137997d.9a27a8",
+                "feae6c2d.92ede",
+                "99ccae69.21b24"
+            ]
+        ]
+    },
+    {
+        "id": "3262f2af.47f97e",
+        "type": "change",
+        "z": "3de292d6.8a219e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "set.setpoint",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 720,
+        "wires": [
+            [
+                "40a6b52c.94a31c"
+            ]
+        ]
+    },
+    {
+        "id": "40a6b52c.94a31c",
+        "type": "switch",
+        "z": "3de292d6.8a219e",
+        "name": "filter",
+        "property": "auto",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 950,
+        "y": 720,
+        "wires": [
+            [
+                "feae6c2d.92ede",
+                "e137997d.9a27a8",
+                "99ccae69.21b24"
+            ]
+        ]
+    },
+    {
+        "id": "92081.60f7cf7f8",
+        "type": "redis-out",
+        "z": "3de292d6.8a219e",
+        "server": "39113e59.d16132",
+        "command": "lpush",
+        "name": "log.auto_mode",
+        "topic": "log.auto_mode",
+        "x": 1100,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "728a3c89.456444",
+        "type": "function",
+        "z": "3de292d6.8a219e",
+        "name": "Create log",
+        "func": "var time_stamp = Math.floor(Date.now());\nmsg.payload = {'timestamp': time_stamp, 'value': msg.payload};\nmsg.topic = 'log.' + msg.topic.replace('set.', '')\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 870,
+        "y": 800,
+        "wires": [
+            [
+                "92081.60f7cf7f8"
+            ]
+        ]
+    },
+    {
+        "id": "b8bc56c3.93c788",
+        "type": "change",
+        "z": "3de292d6.8a219e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "set.auto_mode",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 800,
+        "wires": [
+            [
+                "728a3c89.456444"
+            ]
+        ]
+    },
+    {
+        "id": "d1605b3d.cc4688",
+        "type": "redis-out",
+        "z": "3de292d6.8a219e",
+        "server": "39113e59.d16132",
+        "command": "lpush",
+        "name": "log.setpoint",
+        "topic": "log.setpoint",
+        "x": 390,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "3f5b40b9.882de",
+        "type": "function",
+        "z": "3de292d6.8a219e",
+        "name": "Create log",
+        "func": "var time_stamp = Math.floor(Date.now());\nmsg.payload = {'timestamp': time_stamp, 'value': msg.payload};\nmsg.topic = 'log.' + msg.topic.replace('set.', '')\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 190,
+        "y": 820,
+        "wires": [
+            [
+                "d1605b3d.cc4688"
+            ]
+        ]
     }
 ]
