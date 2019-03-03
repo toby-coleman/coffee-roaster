@@ -23,19 +23,13 @@ layout = html.Div(
                             [
                                 html.Div(
                                     [
-                                        html.H5('Controls'),
-                                    ],
-                                    className='card-header'
-                                ),
-                                html.Div(
-                                    [
                                         html.H6('Set heater output:'),
                                         dcc.Slider(min=0, max=100, step=1, value=0, id='heat-slider'),
                                         html.Span('', className='badge badge-pill badge-success', id='heat-badge'),
                                         html.Br(),
                                         html.Br(),
                                         html.H6('Set temperature rise rate:'),
-                                        dcc.Slider(min=0, max=15, step=1, value=0, id='ror-slider'),
+                                        dcc.Slider(min=0, max=15, step=0.5, value=0, id='ror-slider'),
                                         html.Span('', className='badge badge-pill badge-secondary', id='ror-badge'),
                                         html.Br(),
                                         html.Br(),
@@ -134,7 +128,7 @@ def chart():
 def table():
     data = control.latest(['log.temperature', 'log.temperature_roc', 'log.heat', 'log.setpoint'])
     return [
-        html.Tr([html.Td(key.replace('log.', '')), html.Td(value)])
+        html.Tr([html.Td(key.replace('log.', '')), html.Td('{0:.1f}'.format(value))])
         for key, value in data.items()
     ]
 
@@ -154,15 +148,21 @@ def badge_auto(invert=False):
         return class_name + ('success' if invert else 'secondary')
 
 
+def start_pid(value):
+    auto = control.latest('log.auto_mode')
+    if not auto:
+        # Start PID by changing setpoint to current temperature
+        setpoint = control.latest('log.temperature') + value
+        control.publish('set.setpoint', setpoint)
+    return '{0} °C/minute'.format(value)
+
+
 def update_pid(value):
     auto = control.latest('log.auto_mode')
     if auto:
-        # Already running PID, so ncrement setpoint by given degC/minute
+        # Already running PID, so increment setpoint by given degC/minute
         setpoint = control.latest('log.setpoint') + value * UPDATE_INTERVAL / 60
-    else:
-        # Start PID by changing setpoint to current temperature plus increment
-        setpoint = control.latest('log.temperature') + value * UPDATE_INTERVAL / 60
-    control.publish('set.setpoint', setpoint)
+        control.publish('set.setpoint', setpoint)
     return '{0} °C/minute'.format(value)
 
 
@@ -174,7 +174,7 @@ def data_summary(topics):
     dstart = pd.Timestamp.utcnow() - pd.Timedelta(minutes=30)
     return pd.concat(
         [
-            d[d.index >= dstart].resample('1s').ffill().rename(columns={'value': t})
+            d.resample('1s').ffill().rename(columns={'value': t})
             for t, d in data.items()
         ],
         axis=1

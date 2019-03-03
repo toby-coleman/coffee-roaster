@@ -64,6 +64,13 @@ def update_scatter_chart(value):
     return view.set_heat(value)
 
 
+# Callback to set start PID control
+@app.callback(dash.dependencies.Output('ror-badge', 'children'),
+              [dash.dependencies.Input('ror-slider', 'value')])
+def update_scatter_chart(value, n):
+    return view.start_pid(value)
+
+
 # Callback to set temperature ROR on PID control
 @app.callback(dash.dependencies.Output('ror-badge', 'children'),
               [dash.dependencies.Input('ror-slider', 'value'),
