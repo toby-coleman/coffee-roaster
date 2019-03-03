@@ -152,7 +152,7 @@ def start_pid(value):
     auto = control.latest('log.auto_mode')
     if not auto:
         # Start PID by changing setpoint to current temperature
-        setpoint = control.latest('log.temperature') + value
+        setpoint = control.latest('log.temperature')
         control.publish('set.setpoint', setpoint)
     return '{0} °C/minute'.format(value)
 
@@ -174,7 +174,7 @@ def data_summary(topics):
     dstart = pd.Timestamp.utcnow() - pd.Timedelta(minutes=30)
     return pd.concat(
         [
-            d.resample('1s').ffill().rename(columns={'value': t})
+            d[d.index >= dstart].resample('1s').ffill().rename(columns={'value': t})
             for t, d in data.items()
         ],
         axis=1

@@ -20,7 +20,7 @@ def data(topic, max_points=900, extend=True):
     ).set_index('timestamp').sort_index()
     # Add current timestamp as latest
     if extend:
-        df = df.append(pd.DataFrame({'value': df.iloc[-1, 0]}, index=[pd.Timestamp.utcnow()]))
+        df = df.append(pd.DataFrame({'value': df.iloc[-1, 0]}, index=[pd.Timestamp.now()]))
     return df
 
 

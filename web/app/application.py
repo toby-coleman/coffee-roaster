@@ -4,6 +4,7 @@ import dash_html_components as html
 
 from flask import Flask, send_file
 from datetime import datetime
+from io import BytesIO
 
 import view
 
@@ -98,8 +99,11 @@ def update_table(n):
 @app.server.route('/download')
 def download():
     df = view.data_summary(['log.temperature', 'log.heat', 'log.auto_mode'])
+    csv = BytesIO()
+    csv.write(df.to_csv().encode('utf-8'))
+    csv.seek(0)
     return send_file(
-        df.to_csv(),
+        csv,
         mimetype='text/csv',
         as_attachment=True,
         attachment_filename='profile_{0:%Y%m%d}.csv'.format(datetime.now())
