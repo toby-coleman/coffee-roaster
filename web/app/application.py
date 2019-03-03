@@ -80,7 +80,7 @@ def update_heat_badge(n):
 
 # Callback to update ror-badge colour and update PID settings
 @app.callback(dash.dependencies.Output('ror-badge', 'className'),
-              [dash.dependencies.Input('ror-slider', 'value')
+              [dash.dependencies.Input('ror-slider', 'value'),
                dash.dependencies.Input('data-interval-component', 'n_intervals')])
 def update_ror_badge(value, n):
     view.update_pid(value)
