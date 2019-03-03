@@ -10,6 +10,8 @@ import pandas as pd
 
 import control
 
+UPDATE_INTERVAL = 2
+
 
 layout = html.Div(
     [
@@ -29,7 +31,12 @@ layout = html.Div(
                                     [
                                         html.H6('Set heater output:'),
                                         dcc.Slider(min=0, max=100, step=1, value=0, id='heat-slider'),
-                                        html.Span('', className='badge badge-pill badge-primary', id='heat-badge'),
+                                        html.Span('', className='badge badge-pill badge-success', id='heat-badge'),
+                                        html.Br(),
+                                        html.Br(),
+                                        html.H6('Set temperature rise rate:'),
+                                        dcc.Slider(min=0, max=15, step=1, value=0, id='ror-slider'),
+                                        html.Span('', className='badge badge-pill badge-secondary', id='ror-badge'),
                                         html.Br(),
                                         html.Br(),
                                         html.H6('Latest data:'),
@@ -40,11 +47,17 @@ layout = html.Div(
                                         # For live updates to data table
                                         dcc.Interval(
                                             id='data-interval-component',
-                                            interval=2 * 1000, # in milliseconds
+                                            interval=UPDATE_INTERVAL * 1000, # in milliseconds
                                             n_intervals=0
                                         ),
                                     ],
                                     className='card-body'
+                                ),
+                                html.Div(
+                                    [
+                                        html.A("Download data", href="/download"),
+                                    ],
+                                    className='card-footer text-center'
                                 ),
                             ],
                             className='card',
@@ -119,7 +132,7 @@ def chart():
 
 
 def table():
-    data = control.latest(['log.temperature', 'log.temperature_roc', 'log.heat'])
+    data = control.latest(['log.temperature', 'log.temperature_roc', 'log.heat', 'log.setpoint'])
     return [
         html.Tr([html.Td(key.replace('log.', '')), html.Td(value)])
         for key, value in data.items()
@@ -128,4 +141,41 @@ def table():
 
 def set_heat(value):
     control.publish('set.heat', value)
-    return '{0}%'.format(value)
+    return '{0} %'.format(value)
+
+
+def badge_auto(invert=False):
+    # Use this to change icon colours when in manual/PID mode
+    auto = control.latest('log.auto_mode')
+    class_name = 'badge badge-pill badge-'
+    if auto:
+        return class_name + ('secondary' if invert else 'success')
+    else:
+        return class_name + ('success' if invert else 'secondary')
+
+
+def update_pid(value):
+    auto = control.latest('log.auto_mode')
+    if auto:
+        # Already running PID, so ncrement setpoint by given degC/minute
+        setpoint = control.latest('log.setpoint') + value * UPDATE_INTERVAL / 60
+    else:
+        # Start PID by changing setpoint to current temperature plus increment
+        setpoint = control.latest('log.temperature') + value * UPDATE_INTERVAL / 60
+    control.publish('set.setpoint', setpoint)
+    return '{0} °C/minute'.format(value)
+
+
+def data_summary(topics):
+    # Prepare dataframe containing last 30 mins of history
+    data = {
+        t: control.data(t) for t in topics
+    }
+    dstart = pd.Timestamp.utcnow() - pd.Timedelta(minutes=30)
+    return pd.concat(
+        [
+            d[d.index >= dstart].resample('1s').ffill().rename(columns={'value': t})
+            for t, d in data.items()
+        ],
+        axis=1
+    )

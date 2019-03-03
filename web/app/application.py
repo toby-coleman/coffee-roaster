@@ -2,20 +2,22 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
+from flask import Flask, send_file
+from datetime import datetime
+
 import view
 
 
 stylesheets = [
     'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
 ]
-
+application = Flask(__name__)
 app = dash.Dash(
-    __name__,
+    server=application,
     external_stylesheets=stylesheets
 )
 app.config['suppress_callback_exceptions'] = True
 app.title = 'Coffee Roast Controller'
-application = app.server
 
 
 app.layout = html.Div(children=[
@@ -62,6 +64,28 @@ def update_scatter_chart(value):
     return view.set_heat(value)
 
 
+# Callback to set temperature ROR on PID control
+@app.callback(dash.dependencies.Output('ror-badge', 'children'),
+              [dash.dependencies.Input('ror-slider', 'value'),
+               dash.dependencies.Input('data-interval-component', 'n_intervals')])
+def update_scatter_chart(value, n):
+    return view.update_pid(value)
+
+
+# Callback to update heat-badge colour
+@app.callback(dash.dependencies.Output('heat-badge', 'className'),
+              [dash.dependencies.Input('data-interval-component', 'n_intervals')])
+def update_heat_badge(n):
+    return view.badge_auto(True)
+
+
+# Callback to update ror-badge colour
+@app.callback(dash.dependencies.Output('ror-badge', 'className'),
+              [dash.dependencies.Input('data-interval-component', 'n_intervals')])
+def update_ror_badge(n):
+    return view.badge_auto(False)
+
+
 # Callback to update latest value table
 @app.callback(dash.dependencies.Output('latest-table', 'children'),
               [dash.dependencies.Input('data-interval-component', 'n_intervals')])
@@ -69,5 +93,17 @@ def update_table(n):
     return view.table()
 
 
+# Data download handler
+@app.server.route('/download')
+def download():
+    df = view.data_summary(['log.temperature', 'log.heat', 'log.auto_mode'])
+    return send_file(
+        df.to_csv(),
+        mimetype='text/csv',
+        as_attachment=True,
+        attachment_filename='profile_{0:%Y%m%d}.csv'.format(datetime.now())
+    )
+
+
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', threaded=True, debug=True, port=80)
+    app.run_server(host='0.0.0.0', threaded=True, debug=True, port=8080)
