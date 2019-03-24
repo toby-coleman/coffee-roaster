@@ -1,4 +1,4 @@
-FROM resin/%%BALENA_MACHINE_NAME%%-alpine-python:3.6-slim
+FROM resin/%%BALENA_MACHINE_NAME%%-python:3.6
 
 # Defines our working directory in container
 RUN mkdir -p /usr/src/app/
@@ -7,8 +7,7 @@ COPY app/requirements.txt /usr/src/app/requirements.txt
 WORKDIR /usr/src/app
 
 # Install Python dependencies
-RUN apk add --no-cache make gcc g++ gfortran && \
-  pip install numpy && \
+RUN pip install numpy && \
   pip install -r requirements.txt
 
 # Copy over the app
