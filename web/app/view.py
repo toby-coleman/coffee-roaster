@@ -29,7 +29,7 @@ layout = html.Div(
                                         html.Br(),
                                         html.Br(),
                                         html.H6('Set temperature rise rate:'),
-                                        dcc.Slider(min=0, max=15, step=0.5, value=0, id='ror-slider'),
+                                        dcc.Slider(min=0, max=20, step=0.5, value=0, id='ror-slider'),
                                         html.Span('', className='badge badge-pill badge-secondary', id='ror-badge'),
                                         html.Br(),
                                         html.Br(),
@@ -63,7 +63,7 @@ layout = html.Div(
                     [
                         html.Div(
                             [
-                                dcc.Graph(id='main-chart'),
+                                dcc.Graph(id='main-chart', config={'displayModeBar': False}),
                                 # For live updates to chart
                                 dcc.Interval(
                                     id='interval-component',
@@ -171,7 +171,7 @@ def data_summary(topics):
     data = {
         t: control.data(t) for t in topics
     }
-    dstart = pd.Timestamp.utcnow() - pd.Timedelta(minutes=30)
+    dstart = pd.Timestamp.now() - pd.Timedelta(minutes=30)
     return pd.concat(
         [
             d[d.index >= dstart].resample('1s').ffill().rename(columns={'value': t})
