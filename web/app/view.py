@@ -109,8 +109,8 @@ def chart():
         row=3, col=1
     )
     # Axis range
-    dfinish = pd.Timestamp.utcnow().value // 10 ** 6
-    dstart = dfinish - 30 * 60 * 1000 # 30 minutes
+    dfinish = pd.Timestamp.utcnow().to_pydatetime()
+    dstart = (pd.Timestamp.utcnow() - pd.Timedelta(minutes=30)).to_pydatetime()
     fig['layout'].update(
         xaxis={
             'title':'Time', 'range': [dstart, dfinish]
