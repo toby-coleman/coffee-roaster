@@ -91,7 +91,7 @@ def chart():
     temperature = control.data('log.temperature')
     heat = control.data('log.heat')
     # Temperature trace
-    fig.append_trace(
+    fig.add_trace(
         go.Scatter(
             x=temperature.index,
             y=temperature.value,
@@ -100,7 +100,7 @@ def chart():
         row=1, col=1
     )
     # Heater trace
-    fig.append_trace(
+    fig.add_trace(
         go.Scatter(
             x=heat.index,
             y=heat.value,

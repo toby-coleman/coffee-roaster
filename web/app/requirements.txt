@@ -2,8 +2,5 @@ pandas
 numpy
 requests
 redis
-plotly
-dash
-dash-renderer
-dash-html-components
-dash-core-components
+plotly==4.0.0
+dash==1.0.2

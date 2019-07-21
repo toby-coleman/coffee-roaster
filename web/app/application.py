@@ -9,14 +9,7 @@ from io import BytesIO
 import view
 
 
-stylesheets = [
-    'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
-]
-application = Flask(__name__)
-app = dash.Dash(
-    server=application,
-    external_stylesheets=stylesheets
-)
+app = dash.Dash(__name__)
 app.config['suppress_callback_exceptions'] = True
 app.title = 'Coffee Roast Controller'
 
