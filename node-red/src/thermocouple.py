@@ -1,4 +1,5 @@
 import argparse
+import math
 import Adafruit_MAX31855.MAX31855 as MAX31855
 
 
@@ -14,6 +15,8 @@ if __name__ == '__main__':
 
     internal_temp = sensor.readInternalC()
     samples = [sensor.readTempC() for x in range(args.samples)]
+    # Remove any bad readings
+    samples = [s for s in samples if not math.isnan(s)]
     if len(samples) > 3:
         # Take trimmed mean
         samples = sorted(samples)[1:-1]
