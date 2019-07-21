@@ -112,7 +112,7 @@ def chart():
     dstart = (pd.Timestamp.utcnow() - pd.Timedelta(minutes=30)).to_pydatetime()
     fig['layout'].update(
         xaxis={
-            'title':'Time', 'range': [dstart, dfinish]
+            'range': [dstart, dfinish]
         },
         yaxis={'title': 'Temperature, °C'},
         yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
