@@ -6,7 +6,7 @@ RUN mkdir -p /usr/src/app/
 # Install node modules, including i2c-bus and Raspberry Pi GPIO
 RUN apk add --no-cache make gcc g++ python python-dev py-pip musl-dev linux-headers && \
   JOBS=MAX npm install -g node-red node-red-contrib-resinio node-red-admin node-red-contrib-redis node-red-contrib-pid --production --silent && \
-  pip install RPi.GPIO && \
+  pip install 'RPi.GPIO>=0.7.0' && \
   npm cache clean --force && rm -rf /tmp/*
 
 # Copy over Python source code and install
