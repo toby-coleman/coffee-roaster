@@ -4,7 +4,7 @@ FROM resin/%%BALENA_MACHINE_NAME%%-alpine-node:8-slim
 RUN mkdir -p /usr/src/app/
 
 # Install node modules, including i2c-bus and Raspberry Pi GPIO
-RUN apk add --no-cache make gcc g++ python python-dev py-pip musl-dev linux-headers && \
+RUN apk add --no-cache make gcc g++ python python-dev py-pip musl-dev linux-headers curl && \
   JOBS=MAX npm install -g node-red@0.20.7 node-red-contrib-resinio node-red-admin node-red-contrib-redis@1.1.7 node-red-contrib-pid --production --silent && \
   pip install 'RPi.GPIO>=0.7.0' && \
   npm cache clean --force && rm -rf /tmp/*
