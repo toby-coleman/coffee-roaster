@@ -112,7 +112,10 @@ layout = html.Div(
                                 ),
                                 html.Div(
                                     [
-                                        html.A("Download data", href="/download"),
+                                        html.A(
+                                            'Download data', href='/download',
+                                            className='btn btn-sm btn-primary'
+                                        ),
                                     ],
                                     className='card-footer text-center'
                                 ),
@@ -176,11 +179,11 @@ def update_chart(fig):
         # First update
         heat = control.data('log.heat')
     # Prepare vertical lines for stopwatch resets
-    stopwatch = control.data('var.stopwatch')
-    #if fig['data'][2]['x']:
-    #    stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]]
+    stopwatch = control.data('log.stopwatch', extend=False)
+    if fig['data'][2]['x']:
+        stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]]
     stopwatch.iloc[::2,:] = -100
-    stopwatch.iloc[::2,:] = 300
+    stopwatch.iloc[1::2,:] = 300
     return {
         'x': [temperature.index, heat.index, stopwatch.index],
         'y': [temperature.value, heat.value, stopwatch.value]
