@@ -44,12 +44,13 @@ def display_page(pathname):
     return view.layout
 
 
-# Callback to update chart
-@app.callback(dash.dependencies.Output('main-chart', 'extendData'),
+# Callback to update axes
+@app.callback(dash.dependencies.Output('main-chart', 'figure'),
               [dash.dependencies.Input('interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
-def update_chart(n, fig):
-    return view.update_chart(fig)
+def update_chart_figure(n, fig):
+    fig['layout']['xaxis']['range'] = view.axis_limits()
+    return fig
 
 
 # Callback to set heater level
@@ -66,13 +67,6 @@ def start_pid(value):
     return view.start_pid(value)
 
 
-# Callback to update heat-badge colour
-@app.callback(dash.dependencies.Output('heat-badge', 'className'),
-              [dash.dependencies.Input('data-interval-component', 'n_intervals')])
-def update_heat_badge(n):
-    return view.badge_auto(True)
-
-
 # Callback to update ror-badge colour and update PID settings
 @app.callback(dash.dependencies.Output('ror-badge', 'className'),
               [dash.dependencies.Input('ror-slider', 'value'),
@@ -82,11 +76,14 @@ def update_ror_badge(value, n):
     return view.badge_auto(False)
 
 
-# Callback to update latest value table
-@app.callback(dash.dependencies.Output('latest-table', 'children'),
-              [dash.dependencies.Input('data-interval-component', 'n_intervals')])
-def update_table(n):
-    return view.table()
+# Callback to data (table and chart)
+@app.callback([dash.dependencies.Output('latest-table', 'children'),
+               dash.dependencies.Output('heat-badge', 'className'),
+               dash.dependencies.Output('main-chart', 'extendData')]
+              [dash.dependencies.Input('data-interval-component', 'n_intervals')],
+              [dash.dependencies.State('main-chart', 'figure')])
+def update_data(n, fig):
+    return view.table(), view.badge_auto(True), view.update_chart(fig)
 
 
 # Data download handler

@@ -10,7 +10,14 @@ import pandas as pd
 import control
 
 # Colours: https://coolors.co/3e92cc-1d2d44-fffaff-d8315b-f0ebd8
-UPDATE_INTERVAL = 2
+UPDATE_INTERVAL = 1
+
+
+def axis_limits():
+    return [
+        (pd.Timestamp.utcnow().floor('10min') - pd.Timedelta('20min')).to_pydatetime(),
+        pd.Timestamp.utcnow().ceil('10min').to_pydatetime()
+    ]
 
 
 def initialise_chart():
@@ -40,6 +47,9 @@ def initialise_chart():
     )
     # Layout
     fig['layout'].update(
+        xaxis={
+            'range': axis_limits()
+        }
         yaxis={
             'title': 'Temperature, °C',
             'range': [0, 250]
@@ -79,7 +89,7 @@ layout = html.Div(
                                             html.Tbody([], id='latest-table'),
                                             className='table table-striped table-sm'
                                         ),
-                                        # For live updates to data table
+                                        # For live updates to data table and chart
                                         dcc.Interval(
                                             id='data-interval-component',
                                             interval=UPDATE_INTERVAL * 1000, # in milliseconds
@@ -107,10 +117,10 @@ layout = html.Div(
                                 html.Div(
                                     [
                                         dcc.Graph(figure=initialise_chart(), id='main-chart', config={'displayModeBar': False}),
-                                        # For live updates to chart
+                                        # Slow updates to chart formatting
                                         dcc.Interval(
                                             id='interval-component',
-                                            interval=15 * 1000, # in milliseconds
+                                            interval=5 * 60 * 1000, # in milliseconds
                                             n_intervals=0
                                         ),
                                     ],
@@ -118,7 +128,10 @@ layout = html.Div(
                                 ),
                                 html.Div(
                                     [
-                                        # TODO: Stopwatch
+                                        dcc.Button(
+                                            'Stopwatch: 00:00', id='stopwatch-button',
+                                            className='btn btn-sm btn-success'
+                                        )
                                     ],
                                     className='card-footer text-center'
                                 ),
@@ -133,14 +146,20 @@ layout = html.Div(
 )
 
 
-def update_chart(fig):
-    temperature = control.data('log.temperature')
-    heat = control.data('log.heat')
+def update_chart(fig): 
     # Find last updated timestamp and filter
     if fig['data'][0]['x']:
+        temperature = control.data('log.temperature', max_points=25)
         temperature = temperature[temperature.index > fig['data'][0]['x'][-1]]
+    else:
+        # First update
+        temperature = control.data('log.temperature')
     if fig['data'][1]['x']:
+        heat = control.data('log.heat', max_points=25)
         heat = heat[heat.index > fig['data'][1]['x'][-1]]
+    else:
+        # First update
+        heat = control.data('log.heat')
     return {
         'x': [temperature.index, heat.index],
         'y': [temperature.value, heat.value]
