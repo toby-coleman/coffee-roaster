@@ -133,9 +133,14 @@ layout = html.Div(
 )
 
 
-def update_chart():
+def update_chart(fig):
     temperature = control.data('log.temperature')
     heat = control.data('log.heat')
+    # Find last updated timestamp and filter
+    if fig['data'][0]['x']:
+        temperature = temperature[temperature.index > fig['data'][0]['x'][-1]]
+    if fig['data'][1]['x']:
+        heat = heat[heat.index > fig['data'][1]['x'][-1]]
     return {
         'x': [temperature.index, heat.index],
         'y': [temperature.value, heat.value]
