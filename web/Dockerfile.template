@@ -7,6 +7,7 @@ COPY app/requirements.txt /usr/src/app/requirements.txt
 WORKDIR /usr/src/app
 
 # Install Python dependencies (use PiWheels to avoiding building from scratch)
+RUN apt-get -y install libatlas-base-dev
 RUN pip install numpy --extra-index-url https://www.piwheels.org/simple
 RUN pip install -r requirements.txt --extra-index-url https://www.piwheels.org/simple
 
