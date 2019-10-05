@@ -13,74 +13,6 @@ import control
 UPDATE_INTERVAL = 2
 
 
-layout = html.Div(
-    [
-        html.Div(
-            [
-                html.Div(
-                    [
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        html.H6('Set heater output:'),
-                                        dcc.Slider(min=0, max=100, step=1, value=0, id='heat-slider'),
-                                        html.Span('', className='badge badge-pill badge-success', id='heat-badge'),
-                                        html.Br(),
-                                        html.Br(),
-                                        html.H6('Set temperature rise rate:'),
-                                        dcc.Slider(min=0, max=20, step=0.5, value=0, id='ror-slider'),
-                                        html.Span('', className='badge badge-pill badge-secondary', id='ror-badge'),
-                                        html.Br(),
-                                        html.Br(),
-                                        html.H6('Latest data:'),
-                                        html.Table(
-                                            html.Tbody([], id='latest-table'),
-                                            className='table table-striped table-sm'
-                                        ),
-                                        # For live updates to data table
-                                        dcc.Interval(
-                                            id='data-interval-component',
-                                            interval=UPDATE_INTERVAL * 1000, # in milliseconds
-                                            n_intervals=0
-                                        ),
-                                    ],
-                                    className='card-body'
-                                ),
-                                html.Div(
-                                    [
-                                        html.A("Download data", href="/download"),
-                                    ],
-                                    className='card-footer text-center'
-                                ),
-                            ],
-                            className='card',
-                            style={'width': '100%', 'height': '460px'}
-                        )
-                    ], className='col-lg-4'),
-
-                html.Div(
-                    [
-                        html.Div(
-                            [
-                                dcc.Graph(figure=initialise_chart(), id='main-chart', config={'displayModeBar': False}),
-                                # For live updates to chart
-                                dcc.Interval(
-                                    id='interval-component',
-                                    interval=15 * 1000, # in milliseconds
-                                    n_intervals=0
-                                ),
-                            ],
-                            className='card'
-                        )
-                    ], className='col-lg-8'),
-
-            ], className='row ml-4 mr-4 pt-4'
-        ),
-    ]
-)
-
-
 def initialise_chart():
     fig = tools.make_subplots(
         rows=3, cols=1,
@@ -113,12 +45,91 @@ def initialise_chart():
         },
         yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
         margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
-        height=460,
+        height=400,
         showlegend=False,
         plot_bgcolor='#F0EBD8'
     )
     
     return fig
+
+
+layout = html.Div(
+    [
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        html.H6('Set heater output:'),
+                                        dcc.Slider(min=0, max=100, step=1, value=0, id='heat-slider'),
+                                        html.Span('', className='badge badge-pill badge-success', id='heat-badge'),
+                                        html.Br(),
+                                        html.Br(),
+                                        html.H6('Set temperature rise rate:'),
+                                        dcc.Slider(min=0, max=20, step=0.5, value=0, id='ror-slider'),
+                                        html.Span('', className='badge badge-pill badge-secondary', id='ror-badge'),
+                                        html.Br(),
+                                        html.Br(),
+                                        html.H6('Latest data:'),
+                                        html.Table(
+                                            html.Tbody([], id='latest-table'),
+                                            className='table table-striped table-sm'
+                                        ),
+                                        # For live updates to data table
+                                        dcc.Interval(
+                                            id='data-interval-component',
+                                            interval=UPDATE_INTERVAL * 1000, # in milliseconds
+                                            n_intervals=0
+                                        ),
+                                    ],
+                                    className='card-body',
+                                ),
+                                html.Div(
+                                    [
+                                        html.A("Download data", href="/download"),
+                                    ],
+                                    className='card-footer text-center'
+                                ),
+                            ],
+                            className='card',
+                            style={'width': '100%', 'height': '460px'}
+                        )
+                    ], className='col-lg-4'),
+
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        dcc.Graph(figure=initialise_chart(), id='main-chart', config={'displayModeBar': False}),
+                                        # For live updates to chart
+                                        dcc.Interval(
+                                            id='interval-component',
+                                            interval=15 * 1000, # in milliseconds
+                                            n_intervals=0
+                                        ),
+                                    ],
+                                    className='card-body'
+                                ),
+                                html.Div(
+                                    [
+                                        # TODO: Stopwatch
+                                    ],
+                                    className='card-footer text-center'
+                                ),
+                            ],
+                            className='card'
+                        )
+                    ], className='col-lg-8'),
+
+            ], className='row ml-4 mr-4 pt-4'
+        ),
+    ]
+)
 
 
 def update_chart():
