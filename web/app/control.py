@@ -29,7 +29,7 @@ def publish(topic, value):
 
 
 def log(topic, value):
-    r.lpush(topic, json.dump({'value': value})
+    r.lpush(topic, json.dump({'timestamp': pd.Timestamp.utcnow().isoformat(), 'value': value}))
 
 
 def latest(topic):

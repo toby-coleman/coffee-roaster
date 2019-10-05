@@ -175,11 +175,17 @@ def update_chart(fig):
     else:
         # First update
         heat = control.data('log.heat')
+    # Prepare vertical lines for stopwatch resets
+    stopwatch = control.data('var.stopwatch')
+    if fig['data'][2]['x']:
+        stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]]
+    stopwatch.iloc[::2,:] = -100
+    stopwatch.iloc[::2,:] = 300
     return {
-        'x': [temperature.index, heat.index],
-        'y': [temperature.value, heat.value]
+        'x': [temperature.index, heat.index, stopwatch.index],
+        'y': [temperature.value, heat.value, stopwatch.value]
     },
-    [0, 1]
+    [0, 1, 2]
 
 
 def table():
