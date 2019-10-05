@@ -46,12 +46,12 @@ def initialise_chart():
         },
         yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
         margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
-        height=400,
+        height=390,
         showlegend=False,
         plot_bgcolor='#F0EBD8'
     )
     
-    return fig
+    return fig.to_dict()
 
 
 layout = html.Div(
@@ -136,10 +136,11 @@ layout = html.Div(
 def update_chart():
     temperature = control.data('log.temperature')
     heat = control.data('log.heat')
-    return [
-        {'x': temperature.index, 'y': temperature.value},
-        {'x': heat.index, 'y': heat.value},
-    ]
+    return {
+        'x': [temperature.index, heat.index],
+        'y': [temperature.value, heat.value]
+    },
+    [0, 1]
 
 
 def table():
