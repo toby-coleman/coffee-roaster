@@ -1,6 +1,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.exceptions import PreventUpdate
 
 from flask import Flask, send_file
 from datetime import datetime
@@ -44,13 +45,13 @@ def display_page(pathname):
     return view.layout
 
 
-# Refresh chart to reset axes
+# Callback to update axes
 @app.callback(dash.dependencies.Output('main-chart', 'figure'),
               [dash.dependencies.Input('interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
 def update_chart_figure(n, fig):
-    if n > 0:
-        return view.initialise_chart()
+    fig['layout']['xaxis2']['range'] = view.axis_limits()
+    return fig
 
 
 # Callback to set heater level
@@ -84,6 +85,8 @@ def update_ror_badge(value, n):
               [dash.dependencies.Input('data-interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
 def update_data(n, fig):
+    if not fig:
+        PreventUpdate()
     return view.table(), view.badge_auto(True), view.update_chart(fig), view.stopwatch()
 
 
@@ -99,7 +102,7 @@ def reset_stopwatch(n):
 # Data download handler
 @app.server.route('/download')
 def download():
-    df = view.data_summary(['log.temperature', 'log.heat', 'log.auto_mode'])
+    df = view.data_summary(['log.temperature', 'log.heat', 'log.auto_mode', 'log.stopwatch'])
     csv = BytesIO()
     csv.write(df.to_csv().encode('utf-8'))
     csv.seek(0)

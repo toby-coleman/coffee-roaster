@@ -57,7 +57,7 @@ def initialise_chart():
     )
     # Layout
     fig['layout'].update(
-        xaxis={
+        xaxis2={
             'range': axis_limits(),
             'autorange': False
         },
