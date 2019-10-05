@@ -51,7 +51,7 @@ def initialise_chart():
         go.Scatter(
             x=[],
             y=[],
-            name='Stopwatch reset', marker={'color': '3E92CC', 'symbol': 'star', 'size': 10}, mode='markers'
+            name='Stopwatch reset', marker={'color': '#3E92CC', 'symbol': 'star', 'size': 10}, mode='markers'
         ),
         row=3, col=1
     )
