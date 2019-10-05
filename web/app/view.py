@@ -49,7 +49,7 @@ def initialise_chart():
     fig['layout'].update(
         xaxis={
             'range': axis_limits()
-        }
+        },
         yaxis={
             'title': 'Temperature, °C',
             'range': [0, 250]
