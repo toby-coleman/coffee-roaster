@@ -91,7 +91,8 @@ def update_data(n, fig):
 @app.callback(dash.dependencies.Output('hidden-div', 'children'),
               [dash.dependencies.Input('stopwatch-button', 'n_clicks')])
 def reset_stopwatch(n):
-    view.reset_stopwatch()
+    if n:
+        view.reset_stopwatch()
     return ''
 
 

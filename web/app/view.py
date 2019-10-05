@@ -68,7 +68,7 @@ def initialise_chart():
         },
         yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
         margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
-        height=380,
+        height=360,
         showlegend=False,
         plot_bgcolor='#F0EBD8'
     )
