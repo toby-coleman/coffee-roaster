@@ -28,6 +28,10 @@ def publish(topic, value):
     r.publish(topic, value)
 
 
+def log(topic, value):
+    r.lpush(topic, json.dump({'value': value})
+
+
 def latest(topic):
     if isinstance(topic, list):
         return {t: latest(t) for t in topic}

@@ -46,18 +46,29 @@ def initialise_chart():
         ),
         row=3, col=1
     )
+    fig.add_trace(
+        # Stopwatch resets (vertical lines)
+        go.Scatter(
+            x=[],
+            y=[],
+            name='Stopwatch reset', line={'color': '#3E92CC', 'shape': 'hv', 'width': 2, 'dash': 'dash'}, mode='lines'
+        ),
+        row=1, col=1
+    )
     # Layout
     fig['layout'].update(
         xaxis={
-            'range': axis_limits()
+            'range': axis_limits(),
+            'autorange': False
         },
         yaxis={
             'title': 'Temperature, °C',
-            'range': [0, 250]
+            'range': [0, 250],
+            'autorange': False
         },
         yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
         margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
-        height=390,
+        height=380,
         showlegend=False,
         plot_bgcolor='#F0EBD8'
     )
@@ -230,7 +241,7 @@ def data_summary(topics):
 def stopwatch():
     # Get last stopwatch reset
     reset_time = control.latest('var.stopwatch')
-    elapsed = time.time() - float(reset_time) if reset_time else 0
+    elapsed = time.time() - reset_time if reset_time else 0
     # Return stopwatch value
     return 'Stopwatch: {minutes:02d}:{seconds:02d}'.format(
         minutes=int(elapsed / 60), seconds=int(elapsed % 60)
@@ -238,4 +249,4 @@ def stopwatch():
 
 
 def reset_stopwatch():
-    control.publish('var.stopwatch', time.time())
+    control.log('var.stopwatch', time.time())
