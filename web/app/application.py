@@ -76,14 +76,23 @@ def update_ror_badge(value, n):
     return view.badge_auto(False)
 
 
-# Callback to data (table and chart)
+# Callback to data (table, chart, stopwatch)
 @app.callback([dash.dependencies.Output('latest-table', 'children'),
                dash.dependencies.Output('heat-badge', 'className'),
-               dash.dependencies.Output('main-chart', 'extendData')]
+               dash.dependencies.Output('main-chart', 'extendData'),
+               dash.dependencies.Output('stopwatch-button', 'children')]
               [dash.dependencies.Input('data-interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
 def update_data(n, fig):
-    return view.table(), view.badge_auto(True), view.update_chart(fig)
+    return view.table(), view.badge_auto(True), view.update_chart(fig), view.stopwatch()
+
+
+# Stopwatch click (reset)
+@app.callback(dash.dependencies.Output('stopwatch-button', 'children'),
+              [dash.dependencies.Input('stopwatch-button', 'n_clicks')])
+def reset_stopwatch(n):
+    view.reset_stopwatch()
+    return view.stopwatch()
 
 
 # Data download handler

@@ -128,8 +128,8 @@ layout = html.Div(
                                 ),
                                 html.Div(
                                     [
-                                        dcc.Button(
-                                            'Stopwatch: 00:00', id='stopwatch-button',
+                                        html.Button(
+                                            'Stopwatch', id='stopwatch-button',
                                             className='btn btn-sm btn-success'
                                         )
                                     ],
@@ -221,3 +221,12 @@ def data_summary(topics):
         ],
         axis=1
     )
+
+
+def stopwatch():
+    # Return stopwatch value
+    return 'Stopwatch: 00:00'
+
+
+def reset_stopwatch():
+    pass
