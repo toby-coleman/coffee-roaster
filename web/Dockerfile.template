@@ -1,4 +1,4 @@
-FROM resin/%%BALENA_MACHINE_NAME%%-python:3.6
+FROM resin/%%BALENA_MACHINE_NAME%%-python:3.7
 
 # Defines our working directory in container
 RUN mkdir -p /usr/src/app/
@@ -6,9 +6,9 @@ RUN mkdir -p /usr/src/app/
 COPY app/requirements.txt /usr/src/app/requirements.txt
 WORKDIR /usr/src/app
 
-# Install Python dependencies
-RUN pip install numpy && \
-  pip install -r requirements.txt
+# Install Python dependencies (use PiWheels to avoiding building from scratch)
+RUN pip install numpy --extra-index-url https://www.piwheels.org/simple
+RUN pip install -r requirements.txt --extra-index-url https://www.piwheels.org/simple
 
 # Copy over the app
 COPY ./app ./
