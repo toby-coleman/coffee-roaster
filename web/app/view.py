@@ -9,6 +9,7 @@ import pandas as pd
 
 import control
 
+# Colours: https://coolors.co/3e92cc-1d2d44-fffaff-d8315b-f0ebd8
 UPDATE_INTERVAL = 2
 
 
@@ -89,23 +90,23 @@ def chart():
 
     temperature = control.data('log.temperature')
     heat = control.data('log.heat')
-    # Temperature trace
-    fig.add_trace(
-        go.Scatter(
-            x=temperature.index,
-            y=temperature.value,
-            name='Temperature', line={'color': '#1f77b4', 'shape': 'hv', 'width': 1}, mode='lines'
-        ),
-        row=1, col=1
-    )
-    # Heater trace
-    fig.add_trace(
-        go.Scatter(
-            x=heat.index,
-            y=heat.value,
-            name='Heater output', line={'color': '#d62728', 'shape': 'hv', 'width': 1}, mode='lines'
-        ),
-        row=3, col=1
+    
+    fig.add_traces(
+        [
+            # Temperature trace
+            go.Scatter(
+                x=temperature.index,
+                y=temperature.value,
+                name='Temperature', line={'color': '#1D2D44', 'shape': 'hv', 'width': 1}, mode='lines'
+            ),
+            # Heater trace
+            go.Scatter(
+                x=heat.index,
+                y=heat.value,
+                name='Heater output', line={'color': '#D8315B', 'shape': 'hv', 'width': 1}, mode='lines'
+            ),
+        ]
+        row=[1, 3], col=[1, 1]
     )
     # Axis range
     dfinish = pd.Timestamp.utcnow().to_pydatetime()
@@ -114,11 +115,15 @@ def chart():
         xaxis={
             'range': [dstart, dfinish]
         },
-        yaxis={'title': 'Temperature, °C'},
+        yaxis={
+            'title': 'Temperature, °C',
+            'range': [0, 250]
+        },
         yaxis2={'title': 'Heater state, %', 'range': [-10, 110]},
         margin={'l': 60, 'r': 25, 't': 25, 'b': 60},
         height=460,
         showlegend=False,
+        plot_bgcolor='#F0EBD8'
     )
     
     return fig
