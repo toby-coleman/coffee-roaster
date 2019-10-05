@@ -143,6 +143,9 @@ layout = html.Div(
 
             ], className='row ml-4 mr-4 pt-4'
         ),
+        html.Div(
+            id='hidden-div', style={'display': 'none'}
+        )
     ]
 )
 

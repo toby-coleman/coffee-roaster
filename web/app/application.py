@@ -88,11 +88,11 @@ def update_data(n, fig):
 
 
 # Stopwatch click (reset)
-@app.callback(dash.dependencies.Output('stopwatch-button', 'children'),
+@app.callback(dash.dependencies.Output('hidden-div', 'children'),
               [dash.dependencies.Input('stopwatch-button', 'n_clicks')])
 def reset_stopwatch(n):
     view.reset_stopwatch()
-    return view.stopwatch()
+    return ''
 
 
 # Data download handler
