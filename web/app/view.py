@@ -6,6 +6,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 import pandas as pd
+import time
 
 import control
 
@@ -224,9 +225,14 @@ def data_summary(topics):
 
 
 def stopwatch():
+    # Get last stopwatch reset
+    reset_time = control.latest('var.stopwatch')
+    elapsed = time.time() - float(reset_time) if reset_time else 0
     # Return stopwatch value
-    return 'Stopwatch: 00:00'
+    return 'Stopwatch: {minutes:02d}:{seconds:02d}'.format(
+        minutes=int(elapsed / 60), seconds=int(elapsed % 60)
+    )
 
 
 def reset_stopwatch():
-    pass
+    control.publish('var.stopwatch', time.time())

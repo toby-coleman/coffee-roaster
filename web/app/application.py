@@ -80,7 +80,7 @@ def update_ror_badge(value, n):
 @app.callback([dash.dependencies.Output('latest-table', 'children'),
                dash.dependencies.Output('heat-badge', 'className'),
                dash.dependencies.Output('main-chart', 'extendData'),
-               dash.dependencies.Output('stopwatch-button', 'children')]
+               dash.dependencies.Output('stopwatch-button', 'children')],
               [dash.dependencies.Input('data-interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
 def update_data(n, fig):
