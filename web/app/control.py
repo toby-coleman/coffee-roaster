@@ -1,6 +1,7 @@
 import pandas as pd
 import redis
 import json
+import time
 
 
 r = redis.Redis(host='redis', port=6379, db=0)
@@ -29,7 +30,7 @@ def publish(topic, value):
 
 
 def log(topic, value):
-    r.lpush(topic, json.dump({'timestamp': pd.Timestamp.utcnow().isoformat(), 'value': value}))
+    r.lpush(topic, json.dumps({'timestamp': int(time.time() * 1000), 'value': value}))
 
 
 def latest(topic):

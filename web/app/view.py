@@ -246,7 +246,7 @@ def data_summary(topics):
 
 def stopwatch():
     # Get last stopwatch reset
-    reset_time = control.latest('var.stopwatch')
+    reset_time = control.latest('log.stopwatch')
     elapsed = time.time() - reset_time if reset_time else 0
     # Return stopwatch value
     return 'Stopwatch: {minutes:02d}:{seconds:02d}'.format(
@@ -255,4 +255,4 @@ def stopwatch():
 
 
 def reset_stopwatch():
-    control.log('var.stopwatch', time.time())
+    control.log('log.stopwatch', time.time())
