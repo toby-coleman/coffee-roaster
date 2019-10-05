@@ -44,13 +44,13 @@ def display_page(pathname):
     return view.layout
 
 
-# Callback to update axes
+# Refresh chart to reset axes
 @app.callback(dash.dependencies.Output('main-chart', 'figure'),
               [dash.dependencies.Input('interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
 def update_chart_figure(n, fig):
-    fig['layout']['xaxis']['range'] = view.axis_limits()
-    return fig
+    if n > 0:
+        return view.initialise_chart()
 
 
 # Callback to set heater level

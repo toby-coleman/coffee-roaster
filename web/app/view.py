@@ -51,9 +51,9 @@ def initialise_chart():
         go.Scatter(
             x=[],
             y=[],
-            name='Stopwatch reset', line={'color': '#3E92CC', 'shape': 'hv', 'width': 2, 'dash': 'dash'}, mode='lines'
+            name='Stopwatch reset', marker={'color': '3E92CC', 'symbol': 'star', 'size': 10}, mode='markers'
         ),
-        row=1, col=1
+        row=3, col=1
     )
     # Layout
     fig['layout'].update(
@@ -181,9 +181,7 @@ def update_chart(fig):
     # Prepare vertical lines for stopwatch resets
     stopwatch = control.data('log.stopwatch', extend=False)
     if fig['data'][2]['x']:
-        stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]]
-    stopwatch.iloc[::2,:] = -100
-    stopwatch.iloc[1::2,:] = 300
+        stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]].assign(value=100)
     return {
         'x': [temperature.index, heat.index, stopwatch.index],
         'y': [temperature.value, heat.value, stopwatch.value]
