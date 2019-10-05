@@ -1,5 +1,5 @@
 import plotly.graph_objs as go
-from plotly import tools
+from plotly import subplots
 
 import dash
 import dash_core_components as dcc
@@ -14,28 +14,29 @@ UPDATE_INTERVAL = 2
 
 
 def initialise_chart():
-    fig = tools.make_subplots(
+    fig = subplots.make_subplots(
         rows=3, cols=1,
         shared_xaxes=True, specs=[[{'rowspan': 2}], [None], [{}]],
         print_grid=False
     )
     
-    fig.add_traces(
-        [
-            # Temperature trace
-            go.Scatter(
-                x=[],
-                y=[],
-                name='Temperature', line={'color': '#1D2D44', 'shape': 'hv', 'width': 1}, mode='lines'
-            ),
-            # Heater trace
-            go.Scatter(
-                x=[],
-                y=[],
-                name='Heater output', line={'color': '#D8315B', 'shape': 'hv', 'width': 1}, mode='lines'
-            ),
-        ],
-        row=[1, 3], col=[1, 1]
+    fig.add_trace(
+        # Temperature trace
+        go.Scatter(
+            x=[],
+            y=[],
+            name='Temperature', line={'color': '#1D2D44', 'shape': 'hv', 'width': 1}, mode='lines'
+        ),
+        row=1, col=1
+    )
+    fig.add_trace(
+        # Heater trace
+        go.Scatter(
+            x=[],
+            y=[],
+            name='Heater output', line={'color': '#D8315B', 'shape': 'hv', 'width': 1}, mode='lines'
+        ),
+        row=3, col=1
     )
     # Layout
     fig['layout'].update(
