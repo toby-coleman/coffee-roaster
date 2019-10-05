@@ -4,4 +4,3 @@ requests
 redis
 plotly==4.0.0
 dash==1.0.2
-timeout-decorator==0.4.1

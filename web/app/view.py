@@ -17,8 +17,45 @@ UPDATE_INTERVAL = 1
 def axis_limits():
     return [
         (pd.Timestamp.utcnow().floor('10min') - pd.Timedelta('20min')).to_pydatetime(),
-        pd.Timestamp.utcnow().ceil('10min').to_pydatetime()
+        (pd.Timestamp.utcnow() + pd.Timedelta('5min')).ceil('10min').to_pydatetime()
     ]
+
+
+def empty_figure(text='No data'):
+    return {
+    'layout': {
+        'paper_bgcolor': 'rgba(0,0,0,0)',
+        'plot_bgcolor': 'rgba(0,0,0,0)',
+        'showlegend': False,
+        'xaxis': {
+            'range': [0, 1],
+            'showgrid': False,
+            'zeroline': False,
+            'showline': False,
+            'ticks': '',
+            'showticklabels': False
+        },
+        'yaxis': {
+            'range': [0, 1],
+            'showgrid': False,
+            'zeroline': False,
+            'showline': False,
+            'ticks': '',
+            'showticklabels': False
+        },
+        'annotations': [
+            {
+                'x': 0.5,
+                'y': 0.5,
+                'xref': 'x',
+                'yref': 'y',
+                'text': text,
+                'font': {'color': 'white'},
+                'showarrow': False,
+            }
+        ],
+    },
+}
 
 
 def initialise_chart():
@@ -131,7 +168,7 @@ layout = html.Div(
                             [
                                 html.Div(
                                     [
-                                        dcc.Graph(id='main-chart', config={'displayModeBar': False}),
+                                        dcc.Graph(figure=empty_figure('Loading...'), id='main-chart', config={'displayModeBar': False}),
                                         # Slow updates to chart formatting
                                         dcc.Interval(
                                             id='interval-component',

@@ -107,7 +107,7 @@ def reset_stopwatch(n):
 # Data download handler
 @app.server.route('/download')
 def download():
-    df = view.data_summary(['log.temperature', 'log.heat', 'log.auto_mode', 'log.stopwatch'])
+    df = view.data_summary(['log.temperature', 'log.heat', 'log.auto_mode'])
     csv = BytesIO()
     csv.write(df.to_csv().encode('utf-8'))
     csv.seek(0)
