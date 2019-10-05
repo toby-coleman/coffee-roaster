@@ -63,7 +63,7 @@ layout = html.Div(
                     [
                         html.Div(
                             [
-                                dcc.Graph(id='main-chart', config={'displayModeBar': False}),
+                                dcc.Graph(figure=initialise_chart(), id='main-chart', config={'displayModeBar': False}),
                                 # For live updates to chart
                                 dcc.Interval(
                                     id='interval-component',
@@ -81,40 +81,32 @@ layout = html.Div(
 )
 
 
-def chart():
+def initialise_chart():
     fig = tools.make_subplots(
         rows=3, cols=1,
         shared_xaxes=True, specs=[[{'rowspan': 2}], [None], [{}]],
         print_grid=False
     )
-
-    temperature = control.data('log.temperature')
-    heat = control.data('log.heat')
     
     fig.add_traces(
         [
             # Temperature trace
             go.Scatter(
-                x=temperature.index,
-                y=temperature.value,
+                x=[],
+                y=[],
                 name='Temperature', line={'color': '#1D2D44', 'shape': 'hv', 'width': 1}, mode='lines'
             ),
             # Heater trace
             go.Scatter(
-                x=heat.index,
-                y=heat.value,
+                x=[],
+                y=[],
                 name='Heater output', line={'color': '#D8315B', 'shape': 'hv', 'width': 1}, mode='lines'
             ),
-        ]
+        ],
         row=[1, 3], col=[1, 1]
     )
-    # Axis range
-    dfinish = pd.Timestamp.utcnow().to_pydatetime()
-    dstart = (pd.Timestamp.utcnow() - pd.Timedelta(minutes=30)).to_pydatetime()
+    # Layout
     fig['layout'].update(
-        xaxis={
-            'range': [dstart, dfinish]
-        },
         yaxis={
             'title': 'Temperature, °C',
             'range': [0, 250]
@@ -127,6 +119,15 @@ def chart():
     )
     
     return fig
+
+
+def update_chart():
+    temperature = control.data('log.temperature')
+    heat = control.data('log.heat')
+    return [
+        {'x': temperature.index, 'y': temperature.value},
+        {'x': heat.index, 'y': heat.value},
+    ]
 
 
 def table():

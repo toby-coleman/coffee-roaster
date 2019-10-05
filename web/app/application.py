@@ -45,10 +45,10 @@ def display_page(pathname):
 
 
 # Callback to update chart
-@app.callback(dash.dependencies.Output('main-chart', 'figure'),
+@app.callback(dash.dependencies.Output('main-chart', 'extendData'),
               [dash.dependencies.Input('interval-component', 'n_intervals')])
 def update_chart(n):
-    return view.chart()
+    return view.update_chart()
 
 
 # Callback to set heater level
