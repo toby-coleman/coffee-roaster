@@ -177,8 +177,8 @@ def update_chart(fig):
         heat = control.data('log.heat')
     # Prepare vertical lines for stopwatch resets
     stopwatch = control.data('var.stopwatch')
-    if fig['data'][2]['x']:
-        stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]]
+    #if fig['data'][2]['x']:
+    #    stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]]
     stopwatch.iloc[::2,:] = -100
     stopwatch.iloc[::2,:] = 300
     return {
