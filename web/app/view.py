@@ -104,7 +104,7 @@ layout = html.Div(
                                         # For live updates to data table and chart
                                         dcc.Interval(
                                             id='data-interval-component',
-                                            interval=UPDATE_INTERVAL * 1000, # in milliseconds
+                                            interval=10 * 1000, # in milliseconds (initial delay)
                                             n_intervals=0
                                         ),
                                     ],
@@ -131,7 +131,7 @@ layout = html.Div(
                             [
                                 html.Div(
                                     [
-                                        dcc.Graph(figure=initialise_chart(), id='main-chart', config={'displayModeBar': False}),
+                                        dcc.Graph(id='main-chart', config={'displayModeBar': False}),
                                         # Slow updates to chart formatting
                                         dcc.Interval(
                                             id='interval-component',
@@ -181,7 +181,8 @@ def update_chart(fig):
     # Prepare vertical lines for stopwatch resets
     stopwatch = control.data('log.stopwatch', extend=False)
     if fig['data'][2]['x']:
-        stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]].assign(value=100)
+        stopwatch = stopwatch[stopwatch.index > fig['data'][2]['x'][-1]]
+    stopwatch = stopwatch.assign(value=100)
     return {
         'x': [temperature.index, heat.index, stopwatch.index],
         'y': [temperature.value, heat.value, stopwatch.value]

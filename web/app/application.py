@@ -47,12 +47,11 @@ def display_page(pathname):
 
 
 # Callback to update axes
-@app.callback(dash.dependencies.Output('main-chart', 'figure'),
-              [dash.dependencies.Input('interval-component', 'n_intervals')],
-              [dash.dependencies.State('main-chart', 'figure')])
-def update_chart_figure(n, fig):
-    fig['layout']['xaxis2']['range'] = view.axis_limits()
-    return fig
+@app.callback([dash.dependencies.Output('main-chart', 'figure'),
+               dash.dependencies.Output('data-interval-component', 'interval')],
+              [dash.dependencies.Input('interval-component', 'n_intervals')])
+def update_chart_figure(n):
+    return view.initialise_chart(), view.UPDATE_INTERVAL * 1000
 
 
 # Callback to set heater level
