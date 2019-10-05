@@ -2,6 +2,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.exceptions import PreventUpdate
+import timeout_decorator
 
 from flask import Flask, send_file
 from datetime import datetime
@@ -84,6 +85,7 @@ def update_ror_badge(value, n):
                dash.dependencies.Output('stopwatch-button', 'children')],
               [dash.dependencies.Input('data-interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
+@timeout_decorator.timeout(0.9, use_signals=False)
 def update_data(n, fig):
     if not fig:
         PreventUpdate()
