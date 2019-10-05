@@ -2,7 +2,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.exceptions import PreventUpdate
-import timeout_decorator
 
 from flask import Flask, send_file
 from datetime import datetime
@@ -77,18 +76,24 @@ def update_ror_badge(value, n):
     return view.badge_auto(False)
 
 
-# Callback to data (table, chart, stopwatch)
+# Callback to data (table, stopwatch)
 @app.callback([dash.dependencies.Output('latest-table', 'children'),
                dash.dependencies.Output('heat-badge', 'className'),
                dash.dependencies.Output('main-chart', 'extendData'),
                dash.dependencies.Output('stopwatch-button', 'children')],
+              [dash.dependencies.Input('data-interval-component', 'n_intervals')])
+def update_data(n):
+    return view.table(), view.badge_auto(True), view.stopwatch()
+
+
+# Callback to data (table, stopwatch)
+@app.callback(dash.dependencies.Output('main-chart', 'extendData'),
               [dash.dependencies.Input('data-interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
-@timeout_decorator.timeout(0.9, use_signals=False)
-def update_data(n, fig):
+def update_chart_data(n, fig):
     if not fig:
         PreventUpdate()
-    return view.table(), view.badge_auto(True), view.update_chart(fig), view.stopwatch()
+    return view.update_chart(fig)
 
 
 # Stopwatch click (reset)
