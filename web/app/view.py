@@ -138,7 +138,7 @@ layout = html.Div(
                                             html.Tbody([], id='latest-table'),
                                             className='table table-striped table-sm'
                                         ),
-                                        # For live updates to data table and chart
+                                        # For live updates to data table and stopwatch
                                         dcc.Interval(
                                             id='data-interval-component',
                                             interval=UPDATE_INTERVAL * 1000, # in milliseconds
@@ -178,7 +178,7 @@ layout = html.Div(
                                         # Chart data update
                                         dcc.Interval(
                                             id='chart-data-interval-component',
-                                            interval=2 * UPDATE_INTERVAL * 1000, # in milliseconds
+                                            interval=5 * 1000, # in milliseconds (initial delay while loading)
                                             n_intervals=0
                                         ),
                                     ],

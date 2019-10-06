@@ -46,10 +46,11 @@ def display_page(pathname):
 
 
 # Callback to update axes
-@app.callback(dash.dependencies.Output('main-chart', 'figure'),
+@app.callback([dash.dependencies.Output('main-chart', 'figure'),
+               dash.dependencies.Output('chart-data-interval-component', 'interval')],
               [dash.dependencies.Input('interval-component', 'n_intervals')])
 def update_chart_figure(n):
-    return view.initialise_chart()
+    return view.initialise_chart(), 2 * view.UPDATE_INTERVAL * 1000
 
 
 # Callback to set heater level
@@ -79,14 +80,14 @@ def update_ror_badge(value, n):
 @app.callback([dash.dependencies.Output('latest-table', 'children'),
                dash.dependencies.Output('heat-badge', 'className'),
                dash.dependencies.Output('stopwatch-button', 'children')],
-              [dash.dependencies.Input('chart-data-interval-component', 'n_intervals')])
+              [dash.dependencies.Input('data-interval-component', 'n_intervals')])
 def update_data(n):
     return view.table(), view.badge_auto(True), view.stopwatch()
 
 
 # Callback to data (table, stopwatch)
 @app.callback(dash.dependencies.Output('main-chart', 'extendData'),
-              [dash.dependencies.Input('data-interval-component', 'n_intervals')],
+              [dash.dependencies.Input('chart-data-interval-component', 'n_intervals')],
               [dash.dependencies.State('main-chart', 'figure')])
 def update_chart_data(n, fig):
     if not fig:
