@@ -8,6 +8,7 @@ from datetime import datetime
 from io import BytesIO
 
 import view
+import control
 
 
 app = dash.Dash(__name__)
@@ -50,6 +51,8 @@ def display_page(pathname):
                dash.dependencies.Output('chart-data-interval-component', 'interval')],
               [dash.dependencies.Input('interval-component', 'n_intervals')])
 def update_chart_figure(n):
+    # Lock updates for 5s while refreshing chart
+    control.set_value('lock', 0, 5)
     return view.initialise_chart(), 2 * view.UPDATE_INTERVAL * 1000
 
 
@@ -91,6 +94,9 @@ def update_data(n):
               [dash.dependencies.State('main-chart', 'figure')])
 def update_chart_data(n, fig):
     if not fig:
+        PreventUpdate()
+    if control.get('lock'):
+        # Abort update if chart refresh has locked it
         PreventUpdate()
     return view.update_chart(fig)
 

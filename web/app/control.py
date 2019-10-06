@@ -29,6 +29,14 @@ def publish(topic, value):
     r.publish(topic, value)
 
 
+def set_value(topic, value, expire):
+    r.set(topic, json.dumps(value), ex=expire)
+
+
+def get_value(topic, value, expire):
+    return r.get(topic)
+
+
 def log(topic, value):
     r.lpush(topic, json.dumps({'timestamp': int(time.time() * 1000), 'value': value}))
 
