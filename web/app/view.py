@@ -141,7 +141,7 @@ layout = html.Div(
                                         # For live updates to data table and chart
                                         dcc.Interval(
                                             id='data-interval-component',
-                                            interval=10 * 1000, # in milliseconds (initial delay)
+                                            interval=UPDATE_INTERVAL * 1000, # in milliseconds
                                             n_intervals=0
                                         ),
                                     ],
@@ -173,6 +173,12 @@ layout = html.Div(
                                         dcc.Interval(
                                             id='interval-component',
                                             interval=5 * 60 * 1000, # in milliseconds
+                                            n_intervals=0
+                                        ),
+                                        # Chart data update
+                                        dcc.Interval(
+                                            id='chart-data-interval-component',
+                                            interval=2 * UPDATE_INTERVAL * 1000, # in milliseconds
                                             n_intervals=0
                                         ),
                                     ],
