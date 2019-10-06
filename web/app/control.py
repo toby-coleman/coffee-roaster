@@ -33,7 +33,7 @@ def set_value(topic, value, expire):
     r.set(topic, json.dumps(value), ex=expire)
 
 
-def get_value(topic, value, expire):
+def get_value(topic):
     v = r.get(topic)
     return json.loads(v) if v else None
 
