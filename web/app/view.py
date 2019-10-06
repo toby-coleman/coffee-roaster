@@ -16,8 +16,8 @@ UPDATE_INTERVAL = 1
 
 def axis_limits():
     return [
-        (pd.Timestamp.utcnow().floor('10min') - pd.Timedelta('20min')).to_pydatetime(),
-        (pd.Timestamp.utcnow() + pd.Timedelta('5min')).ceil('10min').to_pydatetime()
+        (pd.Timestamp.utcnow().floor('5min') - pd.Timedelta('25min')).to_pydatetime(),
+        (pd.Timestamp.utcnow() + pd.Timedelta('5min')).ceil('5min').to_pydatetime()
     ]
 
 
