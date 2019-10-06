@@ -34,7 +34,8 @@ def set_value(topic, value, expire):
 
 
 def get_value(topic, value, expire):
-    return r.get(topic)
+    v = r.get(topic)
+    return json.loads(v) if v else None
 
 
 def log(topic, value):

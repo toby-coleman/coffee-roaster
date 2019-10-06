@@ -52,7 +52,7 @@ def display_page(pathname):
               [dash.dependencies.Input('interval-component', 'n_intervals')])
 def update_chart_figure(n):
     # Lock updates for 5s while refreshing chart
-    control.set_value('lock', 0, 5)
+    control.set_value('lock', True, 5)
     return view.initialise_chart(), 2 * view.UPDATE_INTERVAL * 1000
 
 
@@ -95,7 +95,7 @@ def update_data(n):
 def update_chart_data(n, fig):
     if not fig:
         PreventUpdate()
-    if control.get('lock'):
+    if control.get_value('lock'):
         # Abort update if chart refresh has locked it
         PreventUpdate()
     return view.update_chart(fig)
