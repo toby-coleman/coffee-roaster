@@ -1,4 +1,4 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3.7
+FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3.7-build
 
 # Defines our working directory in container
 RUN mkdir -p /usr/src/app/
