@@ -62,6 +62,14 @@ To change these, go to the Node-RED interface and edit the **read_max31855** blo
 
 1.  [Redis commands](https://redis.io/commands).
 
-### Popcorn maker schematic
+### Popcorn maker circuit diagram
 
-![schematic](figures/diagram.jpg)
+Exact details will vary according to the model of popcorn maker.
+
+Before modification:
+
+![before](figures/circuit-before.png)
+
+After modification:
+
+![after](figures/circuit-after.png)
