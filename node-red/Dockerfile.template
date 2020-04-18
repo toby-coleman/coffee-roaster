@@ -4,9 +4,10 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine-node:8-run
 RUN mkdir -p /usr/src/app/
 
 # Install node modules, including i2c-bus and Raspberry Pi GPIO
-RUN apk add --no-cache make gcc g++ python python-dev py-pip musl-dev linux-headers curl && \
+RUN apk add --no-cache make gcc g++ python3 python3-dev py3-pip musl-dev linux-headers curl && \
   JOBS=MAX npm install -g node-red@0.20.7 node-red-contrib-resinio node-red-admin node-red-contrib-redis@1.1.7 node-red-contrib-pid --production --silent && \
-  pip install 'RPi.GPIO>=0.7.0' && \
+  pip3 install 'RPi.GPIO>=0.7.0' && \
+  pip3 install adafruit-circuitpython-max31855 && \
   npm cache clean --force && rm -rf /tmp/*
 
 # Replace node-red GPIO file to fix Raspberry Pi 4 problem
@@ -15,10 +16,6 @@ RUN curl https://raw.githubusercontent.com/toby-coleman/node-red/master/packages
 
 # Copy over Python source code and install
 COPY ./src/. /usr/src
-WORKDIR /usr/src/Adafruit_Python_GPIO
-RUN python setup.py install
-WORKDIR /usr/src/Adafruit_Python_MAX31855
-RUN python setup.py install
 
 # This will copy all files in our root to the working directory in the container
 WORKDIR /usr/src/app

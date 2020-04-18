@@ -184,7 +184,7 @@
         "id": "13e351b.69051ae",
         "type": "exec",
         "z": "3de292d6.8a219e",
-        "command": "python /usr/src/thermocouple.py --clk=25 --cs=24 --do=18 --samples=10",
+        "command": "python /usr/src/thermocouple.py --samples=10",
         "addpay": false,
         "append": "",
         "useSpawn": "false",

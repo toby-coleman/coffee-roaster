@@ -1,20 +1,23 @@
 import argparse
 import math
-import Adafruit_MAX31855.MAX31855 as MAX31855
+from busio import SPI
+from digitalio import DigitalInOut
+import board
+import adafruit_max31855
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Read thermocouple')
-    parser.add_argument('--clk', default=25, type=int, help='Clock')
-    parser.add_argument('--cs', default=24, type=int, help='Chip select')
-    parser.add_argument('--do', default=18, type=int, help='Data out')
     parser.add_argument('--samples', default=1, type=int, help='Number of samples')
     args = parser.parse_args()
 
-    sensor = MAX31855.MAX31855(args.clk, args.cs, args.do)
+    spi = SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
+    cs = DigitalInOut(board.D6)
 
-    internal_temp = sensor.readInternalC()
-    samples = [sensor.readTempC() for x in range(args.samples)]
+    sensor = adafruit_max31855.MAX31855(spi, cs)
+
+    internal_temp = sensor.reference_temperature
+    samples = [sensor.temperature_NIST for x in range(args.samples)]
     # Remove any bad readings
     samples = [s for s in samples if not math.isnan(s)]
     if len(samples) > 3:

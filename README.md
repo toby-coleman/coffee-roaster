@@ -45,13 +45,9 @@ The Node-RED template is currently configured to use the following pins to conne
 
 | SPI connection | GPIO number |
 |----------------|-------------|
-| CLK            | 25          |
-| CS             | 24          |
-| DO             | 18          |
-
-To change these, go to the Node-RED interface and edit the **read_max31855** block so that the **command** parameter contains the desired port numbers:
-
-    python /usr/src/thermocouple.py --clk=25 --cs=24 --do=18 --samples=10
+| CLK            | SCLK        |
+| CS             | 6           |
+| DO             | MISO        |
 
 ### Node-RED
 
