@@ -2,18 +2,14 @@ version: '2'
 services:
   redis:
     build: ./redis
-    expose:
-      - "6379"
+    ports:
+      - "6379:6379"
   nodered:
     build: ./node-red
     privileged: true
-    links:
-      - redis
     ports:
       - "8080:8080"
   web:
     build: ./web
-    links:
-      - redis
     ports:
       - "80:80"
