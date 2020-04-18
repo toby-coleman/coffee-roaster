@@ -11,8 +11,8 @@
         "type": "redis-config",
         "z": "",
         "host": "redis",
-        "port": "{{REDIS_PORT}}",
-        "dbase": "{{REDIS_DB}}",
+        "port": "6379",
+        "dbase": "127.0.0.1",
         "pass": ""
     },
     {
