@@ -16,8 +16,13 @@ if __name__ == '__main__':
 
     sensor = adafruit_max31855.MAX31855(spi, cs)
 
-    internal_temp = sensor.reference_temperature
-    samples = [sensor.temperature_NIST for x in range(args.samples)]
+    internal_temp = 0 # sensor.reference_temperature
+    samples = []
+    for x in range(args.samples):
+        try:
+            samples.append(sensor.temperature_NIST)
+        except RuntimeError:
+            pass
     # Remove any bad readings
     samples = [s for s in samples if not math.isnan(s)]
     if len(samples) > 3:
